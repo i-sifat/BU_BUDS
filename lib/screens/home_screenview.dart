@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+//https://pub.dev/packages/calendar_view/example
 
 class HomeScreenView extends StatelessWidget {
   const HomeScreenView({super.key});
@@ -7,11 +8,11 @@ class HomeScreenView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Row(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(15.0),
-              child: Row(
+            Container(
+              color: Colors.blue,
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
@@ -20,7 +21,7 @@ class HomeScreenView extends StatelessWidget {
                       Text(
                         "Hi, Jenny Wilson",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         "Here is your activity today",
@@ -35,23 +36,73 @@ class HomeScreenView extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 8.0,
-                  crossAxisSpacing: 8.0,
+                child: Container(
+              color: const Color(0xFFF3F5F8),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                // child: GridView.count(
+                //   crossAxisCount: 2,
+                //   crossAxisSpacing: 15,
+                //   mainAxisSpacing: 15,
+
+                //what is difference between them....
+                child: GridView(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    childAspectRatio:
+                        2, // Adjust this to control the height of children
+                  ),
+                  children: [
+                    SizedBox(
+                      height:
+                          80, // Adjust this value to increase or decrease the container size
+                      width: double.infinity,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height:
+                          80, // Adjust this value to increase or decrease the container size
+                      width: double.infinity,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height:
+                          80, // Adjust this value to increase or decrease the container size
+                      width: double.infinity,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height:
+                          80, // Adjust this value to increase or decrease the container size
+                      width: double.infinity,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                itemCount: 4,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Container(
-                    height: 20, // Adjust height to desired value
-                    width: 100, // Adjust width to desired value
-                    color: Colors.black12, // Temporarily remove decoration
-                  );
-                },
               ),
-            ),
+            )),
           ],
         ),
       ),
