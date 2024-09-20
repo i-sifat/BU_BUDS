@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 
-class AppButton extends StatelessWidget {
+class AppButton extends StatefulWidget {
   final String text;
   final Color textColor;
   final Color bgColor;
@@ -22,19 +22,24 @@ class AppButton extends StatelessWidget {
   });
 
   @override
+  State<AppButton> createState() => _AppButtonState();
+}
+
+class _AppButtonState extends State<AppButton> {
+  @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => onPressed(),
+      onPressed: () => widget.onPressed(),
       style: ElevatedButton.styleFrom(
-          backgroundColor: bgColor,
-          shape: isCircular
+          backgroundColor: widget.bgColor,
+          shape: widget.isCircular
               ? const CircleBorder()
               : RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
-          minimumSize: Size(width ?? 150, height ?? 45)),
+          minimumSize: Size(widget.width ?? 150, widget.height ?? 45)),
       child: Text(
-        text,
-        style: TextStyle(color: textColor),
+        widget.text,
+        style: TextStyle(color: widget.textColor),
       ),
     );
   }

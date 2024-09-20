@@ -1,9 +1,15 @@
+import 'package:bu_buds/screens/onboarding_screen/onboarding_page_01.dart';
 import 'package:bu_buds/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
-class InitialView extends StatelessWidget {
-  const InitialView({super.key});
+class InitialPageView extends StatefulWidget {
+  const InitialPageView({super.key});
 
+  @override
+  State<InitialPageView> createState() => _InitialViewState();
+}
+
+class _InitialViewState extends State<InitialPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,18 +47,26 @@ class InitialView extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "Get an overview of how you are performing and motivate yourself to achieve even moew.",
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(color: Colors.white70, fontWeight: FontWeight.w300),
+            const Padding(
+              padding: EdgeInsets.all(12.0),
+              child: Text(
+                "Get an overview of how you are performing and motivate yourself to achieve even moew.",
+                textAlign: TextAlign.center,
+                style:
+                    TextStyle(color: Colors.white70, fontWeight: FontWeight.w300),
+              ),
             ),
             const SizedBox(
               height: 30,
             ),
             AppButton(
               text: "Let's Start",
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const OnboardingPageView()));
+              },
               height: 45,
               width: 150,
             )

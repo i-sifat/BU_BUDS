@@ -1,9 +1,7 @@
-// https://www.youtube.com/watch?v=jyEoMHcjdD4
-// https://www.youtube.com/watch?v=UAc9aDtQVGA
-
-import 'package:bu_buds/widgets/buttons.dart';
-import 'package:bu_buds/widgets/text_fields.dart';
 import 'package:flutter/material.dart';
+
+
+import 'onboarding_screen/choosing_subject.dart';
 
 class SignUpDetails extends StatelessWidget {
   const SignUpDetails({super.key});
@@ -11,174 +9,292 @@ class SignUpDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(Icons.arrow_back),
-                ),
-                SizedBox(
-                  width: 120,
-                ),
-                Text(
-                  "Sign Up",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          const Text("Name"),
-          SizedBox(
-            width: 330,
-            height: 50,
-            child: ReusableTextField(
-              controller: TextEditingController(),
-              hintText: "Your Name",
-              labelText: "Your Name",
-              borderColor: Colors.red,
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Text("Email"),
-          SizedBox(
-            width: 330,
-            height: 50,
-            child: ReusableTextField(
-              controller: TextEditingController(),
-              hintText: "study@email.com",
-              labelText: "study@email.com",
-              borderColor: Colors.red,
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Text("Password"),
-          SizedBox(
-            width: 330,
-            height: 50,
-            child: ReusableTextField(
-              controller: TextEditingController(),
-              hintText: "Your Password",
-              labelText: "Your Password",
-              borderColor: Colors.red,
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Text("Phone Number"),
-          SizedBox(
-            width: 330,
-            height: 50,
-            child: ReusableTextField(
-              controller: TextEditingController(),
-              hintText: "Phone Number",
-              labelText: "+880 17 1514",
-              borderColor: Colors.red,
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
+      appBar: AppBar(
+        title: const Text(
+          "Sign Up",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      // To handle keyboard overflow, we use SingleChildScrollView
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
+              const Text("Name", style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 8),
+              // Name Input Field
+              TextField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.blue.shade50, // Light blue background
+                  hintText: "Your Name",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12), // More rounded corners
+                    borderSide: const BorderSide(color: Colors.transparent), // No border
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Email field
+              const Text("Email", style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 8),
+              TextField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.blue.shade50, // Light blue background
+                  hintText: "study@email.com",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12), // More rounded corners
+                    borderSide: const BorderSide(color: Colors.transparent),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Password field
+              const Text("Password", style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 8),
+              TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.blue.shade50,
+                  hintText: "Your Password",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.transparent),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Phone Number field
+              const Text("Phone Number", style: TextStyle(fontSize: 16)),
+              const SizedBox(height: 8),
+              TextField(
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.blue.shade50,
+                  hintText: "+880 17 1514",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.transparent),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.blue),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Terms and Conditions Checkbox
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Checkbox(
-                      onChanged: (value) {},
-                      value: true, // Set a default checked state (optional)
+                  Checkbox(
+                    value: true,
+                    checkColor: Colors.white,
+                    activeColor: Colors.blue, // Blue checkbox
+                    onChanged: (bool? value) {
+                      // Handle checkbox change
+                    },
+                  ),
+                  const Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: "I agree with the ",
+                        style: TextStyle(fontSize: 14),
+                        children: [
+                          TextSpan(
+                            text: "terms and conditions",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                          TextSpan(
+                            text: " and also the protection of my personal data on this application",
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-              const Column(
-                children: [
-                  Text(
-                    "I agree with the terms and conditions \nand also the protection of my personal data \non this application",
+              const SizedBox(height: 16),
+
+              // Sign Up Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                ],
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20), // Rounded corners
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Icon inside circular shape with decoration
+                            const Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Image(image: AssetImage('assets/alerticon.png')
+                                // Container(
+                                //   height: 100,
+                                //   width: 100,
+                                //   decoration: BoxDecoration(
+                                //     color: Colors.red.shade100, // Light red background
+                                //     shape: BoxShape.circle,
+                                //   ),
+                                // ),
+                                // Container(
+                                //   height: 80,
+                                //   width: 80,
+                                //   decoration: const BoxDecoration(
+                                //     color: Colors.red, // Darker red inside the circle
+                                //     shape: BoxShape.circle,
+                                //   ),
+                                //   child: const Icon(
+                                //     Icons.verified_rounded, // You can use your asset here
+                                //     color: Colors.white,
+                                //     size: 40,
+                                //   ),
+                                // ),
+                                )],
+                            ),
+                            const SizedBox(height: 20),
+                            const Text(
+                              "Account information \nis correct?",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Colors.black, // Dark text color
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              "Lorem ipsum dolor sit amet, consectetur \nadipiscing elit. Fames velit",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey, // Light grey text
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            // Accept button with red background
+                            SizedBox(
+                              width: double.infinity, // Full-width button
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red, // Red background
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12), // Rounded corners
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const ChoosingSubjectView(),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  "Accept",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+
+                    // Display dialog box to confirm account info
+                    // showDialog(
+                    //   context: context,
+                      // builder: (context) => AlertDialog(
+                      //   content: const Column(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     children: [
+                      //       SizedBox(
+                      //         height: 150,
+                      //         width: 120,
+                      //         child: Image(image: AssetImage('assets/alerticon.png')),
+                      //       ),
+                      //       Text(
+                      //         "Account information is correct?",
+                      //         textAlign: TextAlign.center,
+                      //         style: TextStyle(
+                      //             fontWeight: FontWeight.w800, fontSize: 18),
+                      //       ),
+                      //       SizedBox(height: 20),
+                      //       Text(
+                      //         "Please confirm that all the details entered are accurate.",
+                      //         textAlign: TextAlign.center,
+                      //       ),
+                      //     ],
+                      //   ),
+                      //   actions: [
+                      //     TextButton(
+                      //       onPressed: () {
+                      //         Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (context) => const HomeScreenView()),
+                      //         );
+                      //       },
+                      //       child: const Text("Accept"),
+                      //     )
+                      //   ],
+                      // ),
+                    // );
+                  },
+                  child: const Text("Sign Up", style: TextStyle(color: Colors.white, fontSize: 16)),
+                ),
               ),
             ],
           ),
-          const SizedBox(
-            height: 180,
-          ),
-          AppButton(
-            text: "Sign Up",
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  actions: [
-                    AppButton(
-                        width: 300,
-                        text: "Accept",
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        })
-                  ],
-                  content: SizedBox(
-                    height: 300,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                            height: 150,
-                            width: 120,
-                            child: Image.asset('assets/alerticon.png')),
-                        const Text(
-                          "Account information \nis correct?",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w800, fontSize: 18),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const Text(
-                          "Lorem ipsum dolor sit amet, consectetur \nadipiscing elit. Fames velit ",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontWeight: FontWeight.w400),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-            width: 350,
-            height: 50,
-          )
-        ],
+        ),
       ),
     );
   }
 }
-
-
-
-
-// Container(
-//                       height: 40,
-//                       child:const Column(children: [Text("Account information \nis correct?"),
-//                         Text(
-//                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fames velit ")],)  [
-                        
-//                       ],
-//                     )
