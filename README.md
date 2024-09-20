@@ -30,12 +30,31 @@ Just some demo
 
 
 ## Screenshots
+# BU_BUDS
 
-* ![Onboarding Screen](/path/to/Screenshots/Onboarding-1.png)
-* ![Home Screen](/path/to/Screenshots/Home%20Screen.png)
-* ![Course Screen - My Courses](/path/to/Screenshots/Course%20-%20My%20Courses.png)
-* ![Course Screen](/path/to/Screenshots/Course%20Screen.png)  **Note: Consider renaming for clarity (duplicate)**
-* ![Sign Up - Completion Process](/path/to/Screenshots/Sign%20Up%20-%20Completion%20Process.png)
-* ![Cover Screen](/path/to/Screenshots/Cover%20Screen.png)
-* ![Sign Up - Interest](/path/to/Screenshots/Sign%20Up%20-%20Interest.png)
-* ![Sign Up - Notifications](/path/to/Screenshots/Sign%20Up%20-%20Notifictions.png)
+## Screenshots
+
+### Onboarding
+![Onboarding-1](https://github.com/i-sifat/BU_BUDS/blob/main/Screenshots/Onboarding-1.png)
+
+### Home Screen
+![Home Screen](https://github.com/i-sifat/BU_BUDS/blob/main/Screenshots/Home%20Screen.png)
+
+### My Courses
+![My Courses](https://github.com/i-sifat/BU_BUDS/blob/main/Screenshots/Course%20-%20My%20Courses.png)
+
+### Course Screen
+![Course Screen](https://github.com/i-sifat/BU_BUDS/blob/main/Screenshots/Course%20Screen.png)
+
+### Sign Up - Completion Process
+![Sign Up - Completion Process](https://github.com/i-sifat/BU_BUDS/blob/main/Screenshots/Sign%20Up%20-%20Completion%20Process.png)
+
+### Cover Screen
+![Cover Screen](https://github.com/i-sifat/BU_BUDS/blob/main/Screenshots/Cover%20Screen.png)
+
+### Sign Up - Interest
+![Sign Up - Interest](https://github.com/i-sifat/BU_BUDS/blob/main/Screenshots/Sign%20Up%20-%20Interest.png)
+
+### Sign Up - Notifications
+![Sign Up - Notifications](https://github.com/i-sifat/BU_BUDS/blob/main/Screenshots/Sign%20Up%20-%20Notifictions.png)
+
