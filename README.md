@@ -25,15 +25,6 @@
    ```bash
    flutter run
 
-
-Just some demo
-
-
-## Screenshots
-# BU_BUDS
-
-## Screenshots
-
 ### Onboarding
 ![Onboarding-1](https://github.com/i-sifat/BU_BUDS/blob/main/Screenshots/Onboarding-1.png)
 
