@@ -79,7 +79,7 @@ class MyHomeScreenView extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const CourseScreen()));
+                              builder: (context) => const CourseScreenView()));
                     },
                     child: _buildIconLabel(
                         Icons.book_outlined, 'Course', Colors.teal),
