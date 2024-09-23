@@ -57,7 +57,7 @@ class MyHomeScreenView extends StatelessWidget {
                   crossAxisCount: 2,
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 20,
-                  childAspectRatio: 1.6, // Keep a 2:1 ratio for the cards
+                  childAspectRatio: 1.5, // Keep a 2:1 ratio for the cards
                   children: [
                     _buildGridCard('89%', 'Presence', Colors.orange),
                     _buildGridCard('100%', 'Completeness', Colors.blue),

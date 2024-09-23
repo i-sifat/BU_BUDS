@@ -10,33 +10,35 @@ class CourseScreenView extends StatelessWidget {
       const CustomListViewItem(
         title: 'How to make your design more artful & lyrical',
         subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        image: NetworkImage(
-            'https://example.com/image1.jpg'), // Replace with your image URL
+        image:
+            AssetImage('assets/Rectangle2753.png'), // Corrected image provider
       ),
       const CustomListViewItem(
         title: 'How to make your paper more powerful and high value',
         subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        image: NetworkImage(
-            'https://example.com/image2.jpg'), // Replace with your image URL
+        image:
+            AssetImage('assets/Rectangle2754.png'), // Corrected image provider
       ),
       const CustomListViewItem(
         title: 'How to prepare your documentation assignment',
         subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        image: NetworkImage(
-            'https://example.com/image3.jpg'), // Replace with your image URL
+        image:
+            AssetImage('assets/Rectangle2755.png'), // Corrected image provider
       ),
-      // Add more items as needed
     ];
-    var listViewNames = ['All', 'Matemathics', 'Biology', 'English'];
+
+    var listViewNames = ['All', 'Mathematics', 'Biology', 'English'];
+
     return Scaffold(
+      backgroundColor: Colors.white, // Set scaffold color to white
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.white,
         title: const Text(
           'Course',
           style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
@@ -47,46 +49,80 @@ class CourseScreenView extends StatelessWidget {
         child: Column(
           children: [
             Container(
+              width: double.infinity,
+              height: 200,
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.blue[700]),
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.blue[700],
+              ),
               child: Column(
                 children: [
-                  const Text(
-                      'Upgrade you skill and get \nyour certified Courses'),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Upgrade your skill and get\nyour certified Courses',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontSize: 30),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   ElevatedButton(
-                      onPressed: () {}, child: const Text('Go to my courses'))
+                    onPressed: () {},
+                    child: const Text('Go to my courses'),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(
-              height: 30,
-            ),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
                   'Categories',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                TextButton(onPressed: () {}, child: const Text('View All'))
+                TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'View All',
+                      style: TextStyle(fontSize: 18),
+                    )),
               ],
             ),
-            ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: listViewNames.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                  child: Text(listViewNames[index]),
-                );
-              },
+            const SizedBox(height: 20),
+            SizedBox(
+              height: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: listViewNames.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        right: 10), // Add space between category items
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.blueGrey[50],
+                      ),
+                      child: Text(listViewNames[index]),
+                    ),
+                  );
+                },
+              ),
             ),
-            ListView.separated(
-              itemCount: courseItems.length,
-              itemBuilder: (context, index) => courseItems[index],
-              separatorBuilder: (context, index) => const Divider(),
+            const SizedBox(height: 15), // Add spacing between rows
+            Expanded(
+              child: ListView.separated(
+                itemCount: courseItems.length,
+                itemBuilder: (context, index) => courseItems[index],
+                separatorBuilder: (context, index) => const Divider(
+                  color: Colors.black,
+                  thickness: 1,
+                ), // Add 15px space between each course item
+              ),
             ),
           ],
         ),
