@@ -7,96 +7,67 @@ class ClassScreenView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Course'),
+        title: const Text('My Class'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // Proper back button logic
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.grid_view),
+            onPressed: () {
+              // Change view button logic here
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: () {
+              // Alternate view button logic here
+            },
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
+      body: SafeArea(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Top banner with a call-to-action button
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 30.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Upgrade your skill and get your certified Courses',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle navigation to "Go to my courses"
-                        },
-                        child: const Text('Go to my courses'),
-                      ),
-                    ],
-                  ),
-                ),
+              ClassCard(
+                imageUrl:
+                    'assets/Rectangle2761.png', // Replace with your image path
+                teacherName: 'Wade Warren',
+                subjectName: 'Mathematics',
+                materials: 15,
+                completed: 8,
+                onPressed: () {
+                  // Add logic for mathematics
+                },
               ),
-
-              // Categories section with a "View all" button
-              const SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Categories',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Handle navigation to "View all" categories
-                    },
-                    child: const Text('View all'),
-                  ),
-                ],
+              const SizedBox(height: 20),
+              ClassCard(
+                imageUrl:
+                    'assets/Rectangle2761-1.png', // Replace with your image path
+                teacherName: 'Darlene Robertson',
+                subjectName: 'Biology',
+                materials: 15,
+                completed: 8,
+                onPressed: () {
+                  // Add logic for biology
+                },
               ),
-
-              // Course cards
-              const SizedBox(height: 20.0),
-              const CourseCard(
-                image: 'path/to/image1.jpg',
-                title: 'How to make your design more artful & lyrical',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-              ),
-              const SizedBox(height: 10.0),
-              const CourseCard(
-                image: 'path/to/image2.jpg',
-                title: 'How to make your paper more powerful and high value',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-              ),
-              const SizedBox(height: 10.0),
-              const CourseCard(
-                image: 'path/to/image3.jpg',
-                title: 'How to prepare your documentation assignment',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+              const SizedBox(height: 20),
+              ClassCard(
+                imageUrl:
+                    'assets/Rectangle2761-2.png', // Replace with your image path
+                teacherName: 'Cody Fisher',
+                subjectName: 'English',
+                materials: 15,
+                completed: 8,
+                onPressed: () {
+                  // Add logic for English
+                },
               ),
             ],
           ),
@@ -106,58 +77,76 @@ class ClassScreenView extends StatelessWidget {
   }
 }
 
-class CourseCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final String description;
+class ClassCard extends StatelessWidget {
+  final String imageUrl;
+  final String teacherName;
+  final String subjectName;
+  final int materials;
+  final int completed;
+  final VoidCallback onPressed;
 
-  const CourseCard({
+  const ClassCard({
     super.key,
-    required this.image,
-    required this.title,
-    required this.description,
+    required this.imageUrl,
+    required this.teacherName,
+    required this.subjectName,
+    required this.materials,
+    required this.completed,
+    required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Card(
+      elevation: 5,
+      child: InkWell(
+        onTap: onPressed,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Image.asset(
-                image,
-                width: 100.0,
-                height: 100.0,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(height: 10.0),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: Image.asset(
+                  imageUrl,
+                  height: 80,
+                  width: 80,
+                  fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(height: 5.0),
-              Text(
-                description,
-                style: const TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.grey,
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      teacherName,
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      subjectName,
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(height: 4),
+                    Text('$materials materials'),
+                  ],
+                ),
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: completed == materials ? Colors.green : Colors.red,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '$completed/$materials',
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
             ],

@@ -7,163 +7,160 @@ class PresenceScreenView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Course'),
+        title: const Text('Presences'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+            // Back button logic
+          },
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top banner with a call-to-action button
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 30.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Upgrade your skill and get your certified Courses',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Handle navigation to "Go to my courses"
-                        },
-                        child: const Text('Go to my courses'),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Categories section with a "View all" button
-              const SizedBox(height: 20.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Categories',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      // Handle navigation to "View all" categories
-                    },
-                    child: const Text('View all'),
-                  ),
-                ],
-              ),
-
-              // Course cards
-              const SizedBox(height: 20.0),
-              const CourseCard(
-                image: 'path/to/image1.jpg',
-                title: 'How to make your design more artful & lyrical',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-              ),
-              const SizedBox(height: 10.0),
-              const CourseCard(
-                image: 'path/to/image2.jpg',
-                title: 'How to make your paper more powerful and high value',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-              ),
-              const SizedBox(height: 10.0),
-              const CourseCard(
-                image: 'path/to/image3.jpg',
-                title: 'How to prepare your documentation assignment',
-                description:
-                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-              ),
-            ],
-          ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            PresenceCard(
+              subjectName: 'Mathematics',
+              materials: 15,
+              percentage: 100,
+              attendanceList: [
+                Attendance(date: 'Today', status: 'Present'),
+                Attendance(date: '15 Dec 2021', status: 'Present'),
+                Attendance(date: '12 Dec 2021', status: 'Present'),
+              ],
+            ),
+            const SizedBox(height: 20),
+            const PresenceCard(
+              subjectName: 'Biology',
+              materials: 15,
+              percentage: 85,
+              attendanceList: [],
+            ),
+            const SizedBox(height: 20),
+            const PresenceCard(
+              subjectName: 'English',
+              materials: 15,
+              percentage: 45,
+              attendanceList: [],
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class CourseCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final String description;
+class PresenceCard extends StatefulWidget {
+  final String subjectName;
+  final int materials;
+  final int percentage;
+  final List<Attendance> attendanceList;
 
-  const CourseCard({
+  const PresenceCard({
     super.key,
-    required this.image,
-    required this.title,
-    required this.description,
+    required this.subjectName,
+    required this.materials,
+    required this.percentage,
+    required this.attendanceList,
   });
 
   @override
+  // ignore: library_private_types_in_public_api
+  _PresenceCardState createState() => _PresenceCardState();
+}
+
+class _PresenceCardState extends State<PresenceCard> {
+  bool _isExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.asset(
-                image,
-                width: 100.0,
-                height: 100.0,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(height: 10.0),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+      elevation: 5,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.subjectName,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text('${widget.materials} materials'),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 5.0),
-              Text(
-                description,
-                style: const TextStyle(
-                  fontSize: 14.0,
-                  color: Colors.grey,
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: widget.percentage == 100
+                        ? Colors.green
+                        : widget.percentage > 50
+                            ? Colors.orange
+                            : Colors.red,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '${widget.percentage}%',
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
+              ],
+            ),
+            if (_isExpanded && widget.attendanceList.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              const Divider(),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.attendanceList.length,
+                itemBuilder: (context, index) {
+                  final attendance = widget.attendanceList[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(attendance.date),
+                        Text(attendance.status),
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
-          ),
+            IconButton(
+              icon: Icon(
+                _isExpanded
+                    ? Icons.keyboard_arrow_up
+                    : Icons.keyboard_arrow_down,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+class Attendance {
+  final String date;
+  final String status;
+
+  Attendance({required this.date, required this.status});
 }

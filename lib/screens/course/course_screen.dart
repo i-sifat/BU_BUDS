@@ -1,3 +1,4 @@
+import 'package:bu_buds/screens/course/course_details.dart';
 import 'package:bu_buds/widgets/list_view_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -115,15 +116,28 @@ class CourseScreenView extends StatelessWidget {
             ),
             const SizedBox(height: 15), // Add spacing between rows
             Expanded(
-              child: ListView.separated(
-                itemCount: courseItems.length,
-                itemBuilder: (context, index) => courseItems[index],
-                separatorBuilder: (context, index) => const Divider(
-                  color: Colors.black,
-                  thickness: 1,
-                ), // Add 15px space between each course item
+                child: ListView.separated(
+              itemCount: courseItems.length,
+              itemBuilder: (context, index) {
+                final courseItem = courseItems[index];
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CourseDetailsView(),
+                      ),
+                    );
+                  },
+                  child: courseItem,
+                );
+              },
+              separatorBuilder: (context, index) => const Divider(
+                color: Colors.black,
+                thickness: 1,
               ),
-            ),
+            )),
           ],
         ),
       ),
