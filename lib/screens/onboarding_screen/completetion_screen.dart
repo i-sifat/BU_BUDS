@@ -17,12 +17,13 @@ class _CompletionProcessScreenState extends State<CompletionProcessScreen> {
     super.initState();
     // Navigate to HomeScreen after 2 seconds
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                const MyHomeScreenView()), // Replace with your home screen
+          builder: (context) => const MyHomeScreenView(),
+        ),
+        (Route<dynamic> route) => false, // Removes all previous routes
       );
     });
   }

@@ -15,6 +15,6 @@ class OnboardingData {
         title: "Reading Books",
         description: "Reading new books with top content and excellent stories"
             "Reading new books with top content and excellent stories",
-        image: "assets/onboarding02.png"),
+        image: "assets/onboarding03.png"),
   ];
 }

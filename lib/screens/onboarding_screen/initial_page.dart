@@ -36,7 +36,7 @@ class _InitialViewState extends State<InitialPageView> {
               height: 360,
             ),
             const Text(
-              "Hello and \nWelcome here!",
+              "Hello & \nWelcome Here!",
               style: TextStyle(
                 fontSize: 45,
                 color: Colors.white,
@@ -50,10 +50,10 @@ class _InitialViewState extends State<InitialPageView> {
             const Padding(
               padding: EdgeInsets.all(12.0),
               child: Text(
-                "Get an overview of how you are performing and motivate yourself to achieve even moew.",
+                "Get an overview of how you are performing & \nmotivate yourself to achieve even moew.",
                 textAlign: TextAlign.center,
-                style:
-                    TextStyle(color: Colors.white70, fontWeight: FontWeight.w300),
+                style: TextStyle(
+                    color: Colors.white70, fontWeight: FontWeight.w300),
               ),
             ),
             const SizedBox(
