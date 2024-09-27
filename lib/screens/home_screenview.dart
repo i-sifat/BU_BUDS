@@ -3,165 +3,175 @@ import 'package:bu_buds/screens/course/course_screen.dart';
 import 'package:bu_buds/screens/presence/presence_screen.dart';
 import 'package:bu_buds/screens/subject_screen.dart/subject_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MyHomeScreenView extends StatelessWidget {
   const MyHomeScreenView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:
-          const Color(0xFFF3F5F8), // Background color similar to the screenshot
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return WillPopScope(
+      onWillPop: () async {
+        // Show confirmation dialog when back button is pressed
+        bool shouldExit = await _showExitConfirmationDialog(context);
+        return shouldExit; // return true if 'OK' is pressed, else false
+      },
+      child: Scaffold(
+        backgroundColor: const Color(
+            0xFFF3F5F8), // Background color similar to the screenshot
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Hi, Jenny Wilson',
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          'Here is your activity today,',
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Icon(
+                      Icons.notifications_outlined,
+                      size: 30,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+
+                SizedBox(
+                  height: 270, // Fixed height to prevent overflow
+                  child: GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 20,
+                    crossAxisSpacing: 20,
+                    childAspectRatio: 1.5, // Keep a 2:1 ratio for the cards
                     children: [
-                      Text(
-                        'Hi, Jenny Wilson',
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        'Here is your activity today,',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.grey,
-                        ),
-                      ),
+                      _buildGridCard('89%', 'Presence', Colors.orange),
+                      _buildGridCard('100%', 'Completeness', Colors.blue),
+                      _buildGridCard('18', 'Assignments', Colors.red),
+                      _buildGridCard('12', 'Total Subject', Colors.amber),
                     ],
                   ),
-                  Icon(
-                    Icons.notifications_outlined,
-                    size: 30,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30),
-
-              SizedBox(
-                height: 270, // Fixed height to prevent overflow
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  childAspectRatio: 1.5, // Keep a 2:1 ratio for the cards
-                  children: [
-                    _buildGridCard('89%', 'Presence', Colors.orange),
-                    _buildGridCard('100%', 'Completeness', Colors.blue),
-                    _buildGridCard('18', 'Assignments', Colors.red),
-                    _buildGridCard('12', 'Total Subject', Colors.amber),
-                  ],
                 ),
-              ),
-              const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
-              // Icon row (Course, Subjects, Class, Presence)
-              // Simplified and Interactive Icon Row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Course Icon with Navigation
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
+                // Icon row (Course, Subjects, Class, Presence)
+                // Simplified and Interactive Icon Row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Course Icon with Navigation
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const CourseScreenView()));
+                      },
+                      child: _buildIconLabel(
+                          Icons.book_outlined, 'Course', Colors.teal),
+                    ),
+
+                    // Subjects Icon with Navigation
+                    GestureDetector(
+                      onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const CourseScreenView()));
-                    },
-                    child: _buildIconLabel(
-                        Icons.book_outlined, 'Course', Colors.teal),
-                  ),
+                              builder: (context) => const SubjecScreenView())),
+                      child: _buildIconLabel(
+                          Icons.school_outlined, 'Subjects', Colors.blue),
+                    ),
 
-                  // Subjects Icon with Navigation
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SubjecScreenView())),
-                    child: _buildIconLabel(
-                        Icons.school_outlined, 'Subjects', Colors.blue),
-                  ),
+                    // Class Icon with Navigation
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ClassScreenView())),
+                      child: _buildIconLabel(
+                          Icons.class_outlined, 'Class', Colors.orange),
+                    ),
 
-                  // Class Icon with Navigation
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ClassScreenView())),
-                    child: _buildIconLabel(
-                        Icons.class_outlined, 'Class', Colors.orange),
-                  ),
-
-                  // Presence Icon with Navigation
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PresenceScreenView())),
-                    child: _buildIconLabel(
-                        Icons.check_circle_outline, 'Presence', Colors.green),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 30),
-
-              // Schedule Section
-              const Text(
-                'Schedule',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 15),
-              // Schedule bar
-              Expanded(
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    _buildScheduleItem('Economy', Colors.orange),
-                    _buildScheduleItem('Geography', Colors.red),
-                    _buildScheduleItem('English', Colors.blue),
+                    // Presence Icon with Navigation
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const PresenceScreenView())),
+                      child: _buildIconLabel(
+                          Icons.check_circle_outline, 'Presence', Colors.green),
+                    ),
                   ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 30),
+
+                // Schedule Section
+                const Text(
+                  'Schedule',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                // Schedule bar
+                Expanded(
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      _buildScheduleItem('Economy', Colors.orange),
+                      _buildScheduleItem('Geography', Colors.red),
+                      _buildScheduleItem('English', Colors.blue),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // Default to first tab
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_rounded),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: '',
-          ),
-        ],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: 0, // Default to first tab
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.grid_view_rounded),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today_outlined),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu),
+              label: '',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              label: '',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -248,5 +258,27 @@ class MyHomeScreenView extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Function to show confirmation dialog
+  Future<bool> _showExitConfirmationDialog(BuildContext context) async {
+    return await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Exit App'),
+            content: const Text('Are you sure you want to exit the app?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => SystemNavigator.pop(), // Closes the app
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        ) ??
+        false; // Return false if dialog is dismissed
   }
 }
