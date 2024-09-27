@@ -33,7 +33,7 @@ class MyHomeScreenView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Hi, Jenny Wilson',
+                          'Hi, Sifat',
                           style: TextStyle(
                             fontSize: 30,
                             fontWeight: FontWeight.w600,
