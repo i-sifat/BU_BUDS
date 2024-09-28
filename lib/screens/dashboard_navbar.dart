@@ -4,7 +4,6 @@ import 'package:bu_buds/screens/presence/presence_screen.dart';
 import 'package:bu_buds/screens/subject_screen.dart/subject_screen.dart';
 import 'package:flutter/material.dart';
 
-
 class DashboardNavbarView extends StatelessWidget {
   const DashboardNavbarView({super.key});
 
@@ -132,36 +131,18 @@ class DashboardNavbarView extends StatelessWidget {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    _buildScheduleItem('Economy', Colors.orange),
-                    _buildScheduleItem('Geography', Colors.red),
+                    _buildScheduleItem('LLB', Colors.orange),
+                    _buildScheduleItem('LAW', Colors.red),
                     _buildScheduleItem('English', Colors.blue),
+                    _buildScheduleItem('Sociology', Colors.blue),
+                    _buildScheduleItem('CSE', Colors.blue),
+                    _buildScheduleItem('Architecture', Colors.blue),
                   ],
                 ),
               ),
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0, // Default to first tab
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_rounded),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: '',
-          ),
-        ],
       ),
     );
   }
