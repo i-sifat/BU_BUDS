@@ -1,4 +1,4 @@
-import 'package:bu_buds/screens/onboarding_screen/onboarding_page_01.dart';
+import 'package:bu_buds/screens/onboarding_screen/onboarding_page.dart';
 import 'package:bu_buds/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 

@@ -17,6 +17,24 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
   // To keep track of the current page the user is on
   int currentIndex = 0;
 
+  // Add a PageController to handle smooth transitions
+  final PageController _pageController = PageController();
+
+  // This will store the page offset for smooth opacity transitions
+  double pageOffset = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen to the PageController's changes to update the page offset
+    _pageController.addListener(() {
+      setState(() {
+        pageOffset = _pageController.page ?? 0;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,6 +44,10 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
           // Expanded widget makes the PageView take up all the remaining space
           Expanded(
             child: PageView.builder(
+              // Set scroll direction to vertical (bottom to top transition)
+              scrollDirection: Axis.vertical,
+              // Attach the PageController for custom animations
+              controller: _pageController,
               // Updates the currentIndex when the user changes the page
               onPageChanged: (value) {
                 setState(() {
@@ -36,21 +58,37 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
               itemCount: controller.items.length,
               // Builds each page of the PageView
               itemBuilder: (context, index) {
+                // Calculate the difference between the current page and the index
+                double difference = (pageOffset - index).clamp(-1, 1);
+
+                // Calculate the opacity for the image based on scroll position
+                double opacity = 1 - (difference.abs() * 0.7);
+
                 return Column(
                   mainAxisAlignment:
                       MainAxisAlignment.start, // Align everything at the top
                   children: [
-                    // This is the image part
+                    // This is the image part with bottom two corners rounded
                     SizedBox(
                       // Full width of the screen for the image container
                       width: MediaQuery.of(context).size.width,
                       // Take up 50% of the screen height for the image container
                       height: MediaQuery.of(context).size.height * 0.601,
-                      // The actual image loaded from the assets folder
-                      child: Image.asset(
-                        controller.items[currentIndex].image,
-                        // BoxFit.cover makes the image fill the space while maintaining its aspect ratio
-                        fit: BoxFit.cover,
+                      child: AnimatedOpacity(
+                        // Apply the calculated opacity
+                        opacity: opacity,
+                        duration: const Duration(
+                            milliseconds: 200), // Smooth transition duration
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(30),
+                            bottomRight: Radius.circular(30),
+                          ),
+                          child: Image.asset(
+                            controller.items[index].image,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
 
@@ -60,7 +98,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
 
                     // This is the title text below the image
                     Text(
-                      controller.items[currentIndex].title,
+                      controller.items[index].title,
                       style: const TextStyle(
                         fontSize: 25,
                         color: primaryColor,
@@ -73,7 +111,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: Text(
-                        controller.items[currentIndex].description,
+                        controller.items[index].description,
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 16,
@@ -100,7 +138,8 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                 ),
                 height: 7,
                 width: currentIndex == index ? 30 : 7,
-                duration: const Duration(milliseconds: 700),
+                duration:
+                    const Duration(milliseconds: 300), // Smoother duration
               ),
             ),
           ),
@@ -117,9 +156,13 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
             child: TextButton(
               onPressed: () {
                 setState(() {
-                  // If not on the last page, move to the next page
+                  // If not on the last page, move to the next page with animation
                   if (currentIndex != controller.items.length - 1) {
-                    currentIndex++;
+                    _pageController.animateToPage(
+                      currentIndex + 1,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut, // Smooth transition curve
+                    );
                   } else {
                     // If on the last page, navigate to the SignUpDetails screen
                     Navigator.push(

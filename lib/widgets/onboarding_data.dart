@@ -3,18 +3,19 @@ import 'package:bu_buds/widgets/onboarding_info.dart';
 class OnboardingData {
   List<OnboardingInfo> items = [
     OnboardingInfo(
-        title: "Unlimited Questions",
+        title: "Seamless Course Access",
         description:
-            "High qualities questions and quizzes with hundreds of tests",
+            "Easily access your courses, lectures, and study materials anytime, anywhere.",
         image: "assets/onboarding01.png"),
     OnboardingInfo(
-        title: "Interesting stories",
-        description: "Reading top stories to learn and enhance your knowledge",
+        title: "Stay Updated",
+        description:
+            "Receive real-time updates on announcements, exams, and events directly through the app.",
         image: "assets/onboarding02.png"),
     OnboardingInfo(
-        title: "Reading Books",
-        description: "Reading new books with top content and excellent stories"
-            "Reading new books with top content and excellent stories",
+        title: "Connect with Peers",
+        description:
+            "Engage with classmates and faculty through forums, discussions, and collaborations.",
         image: "assets/onboarding03.png"),
   ];
 }
