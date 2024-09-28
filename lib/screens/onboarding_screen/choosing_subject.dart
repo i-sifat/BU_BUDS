@@ -10,19 +10,19 @@ class ChoosingSubjectView extends StatefulWidget {
 
 class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
   final List<String> topics = [
-    'Mathematics',
-    'Economy',
+    'CSE',
+    'Sociology',
     'English',
-    'Biology',
-    'Geography',
+    'Law',
+    'LLB',
   ];
 
   final List<String> subtexts = [
-    'Geometry, Algorithm',
-    'Stock, Property, News',
-    'Stock, Property, News',
-    'Stock, Property, News',
-    'Stock, Property, News',
+    "Technology, Programming, Engineering",
+    "Humanities, Social Sciences, Research",
+    "Arts, Literature, Communication",
+    "Legal System, Justice, Government",
+    "Legal Education, Career Paths, Legal Profession"
   ];
 
   final List<bool> _selectedTopics = List.generate(5, (index) => false);
@@ -84,7 +84,8 @@ class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
                             radius: 25,
                             backgroundColor: Colors.grey[200],
                             // Placeholder for icon, update with appropriate image or icon
-                            child: const Icon(Icons.subject, color: Colors.blue),
+                            child:
+                                const Icon(Icons.subject, color: Colors.blue),
                           ),
                           title: Text(
                             topics[index],
@@ -95,10 +96,11 @@ class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
                           ),
                           subtitle: Text(
                             subtexts[index],
-                            style: const TextStyle(fontSize: 14, color: Colors.grey),
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.grey),
                           ),
                           trailing: Transform.scale(
-                            scale: 1.5,  // Increase size of the checkbox
+                            scale: 1.5, // Increase size of the checkbox
                             child: Checkbox(
                               value: _selectedTopics[index],
                               onChanged: (value) {
@@ -107,14 +109,14 @@ class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
                                 });
                               },
                               activeColor: Colors.blue,
-                              shape: const CircleBorder(),  // Circular checkbox
+                              shape: const CircleBorder(), // Circular checkbox
                             ),
                           ),
                         ),
                       ),
                       const Divider(
                         thickness: 1,
-                        color: Colors.grey,  // Subtle divider color
+                        color: Colors.grey, // Subtle divider color
                       ),
                     ],
                   );
@@ -132,13 +134,14 @@ class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                onPressed: () {Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationPromptScreen(),
-                  ),
-                );
-                 // Continue button logic
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationPromptScreen(),
+                    ),
+                  );
+                  // Continue button logic
                 },
                 child: const Text(
                   'Continue',
