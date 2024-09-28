@@ -20,7 +20,7 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
     const DashboardNavbarView(),
     const ScheduleNavbarView(),
     const MenuNavigationbarView(),
-    const PersonScreenView(),
+    PersonScreenView(),
   ];
 
   // Method to handle bottom navigation bar tap
