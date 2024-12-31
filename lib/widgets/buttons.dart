@@ -1,11 +1,12 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import '../utils/colors.dart';
+import '../utils/typography.dart';
 
-class AppButton extends StatefulWidget {
+class AppButton extends StatelessWidget {
   final String text;
-  final Color textColor;
-  final Color bgColor;
-  final Function onPressed;
+  final Color? textColor;
+  final Color? bgColor;
+  final VoidCallback onPressed;
   final double? height;
   final double? width;
   final bool isCircular;
@@ -13,8 +14,8 @@ class AppButton extends StatefulWidget {
   const AppButton({
     super.key,
     required this.text,
-    this.textColor = Colors.white,
-    this.bgColor = Colors.red,
+    this.textColor,
+    this.bgColor,
     required this.onPressed,
     this.height,
     this.width,
@@ -22,24 +23,24 @@ class AppButton extends StatefulWidget {
   });
 
   @override
-  State<AppButton> createState() => _AppButtonState();
-}
-
-class _AppButtonState extends State<AppButton> {
-  @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () => widget.onPressed(),
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-          backgroundColor: widget.bgColor,
-          shape: widget.isCircular
-              ? const CircleBorder()
-              : RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-          minimumSize: Size(widget.width ?? 150, widget.height ?? 45)),
+        backgroundColor: bgColor ?? AppColors.primary,
+        foregroundColor: textColor ?? AppColors.white,
+        shape: isCircular
+            ? const CircleBorder()
+            : RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+        minimumSize: Size(width ?? 150, height ?? 45),
+      ),
       child: Text(
-        widget.text,
-        style: TextStyle(color: widget.textColor),
+        text,
+        style: AppTypography.buttonLarge.copyWith(
+          color: textColor ?? AppColors.white,
+        ),
       ),
     );
   }
