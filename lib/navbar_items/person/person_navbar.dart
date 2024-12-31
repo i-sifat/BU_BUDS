@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
+enum TopicKeyEnum { Profile, Account, Setting, About }
+
+typedef TopicMap = Map<TopicKeyEnum, IconData>;
+
 class PersonScreenView extends StatelessWidget {
   // List of topics with corresponding icons
-  final List<Map<String, IconData>> topics = [
-    {'Profile': Icons.person_outline},
-    {'Account': Icons.account_balance_wallet_outlined},
-    {'Setting': Icons.settings_outlined},
-    {'About': Icons.info_outline},
+  final List<TopicMap> topics = [
+    {TopicKeyEnum.Profile: Icons.person_outline},
+    {TopicKeyEnum.Account: Icons.account_balance_wallet_outlined},
+    {TopicKeyEnum.Setting: Icons.settings_outlined},
+    {TopicKeyEnum.About: Icons.info_outline},
   ];
 
   PersonScreenView({super.key});
@@ -62,7 +66,7 @@ class PersonScreenView extends StatelessWidget {
                 itemCount: topics.length,
                 itemBuilder: (context, index) {
                   // Extract the topic name and icon from the map
-                  String topicName = topics[index].keys.first;
+                  String topicName = topics[index].keys.first.name;
                   IconData icon = topics[index].values.first;
 
                   return Column(

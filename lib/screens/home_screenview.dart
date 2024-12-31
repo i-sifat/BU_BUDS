@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dashboard_navbar.dart';
-import 'menu_navbar.dart';
-import 'person_navbar.dart';
-import 'schedule_navbar.dart';
+import '../navbar_items/dashboard/dashboard_navbar.dart';
+import '../navbar_items/menu/menu_navbar.dart';
+import '../navbar_items/person/person_navbar.dart';
+import '../navbar_items/schedule/schedule_navbar.dart';
 import 'package:flutter/services.dart';
 
 class MyHomeScreenView extends StatefulWidget {
