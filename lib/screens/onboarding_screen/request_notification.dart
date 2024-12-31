@@ -1,9 +1,73 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'completetion_screen.dart';
 
 class NotificationPromptScreen extends StatelessWidget {
   const NotificationPromptScreen({super.key});
+
+  Future<void> _requestNotificationPermission(BuildContext context) async {
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
+    );
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        // Handle notification tap
+      },
+    );
+
+    // Request permission
+    final bool? granted = await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
+
+    if (granted != null && granted) {
+      // Show a test notification
+      const AndroidNotificationDetails androidPlatformChannelSpecifics =
+          AndroidNotificationDetails(
+        'bu_buds_channel',
+        'BU BUDS Notifications',
+        channelDescription: 'Notifications from BU BUDS app',
+        importance: Importance.max,
+        priority: Priority.high,
+      );
+      const NotificationDetails platformChannelSpecifics =
+          NotificationDetails(android: androidPlatformChannelSpecifics);
+
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        'Notifications Enabled',
+        'You will now receive important updates from BU BUDS',
+        platformChannelSpecifics,
+      );
+    }
+
+    // Navigate to completion screen regardless of permission status
+    // ignore: use_build_context_synchronously
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CompletionProcessScreen(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +99,13 @@ class NotificationPromptScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sit enim, ac amet ultrices.',
+              'Stay updated with important announcements and events',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 20),
             Image.asset(
-              'assets/notification.png', // Placeholder for the image, update with actual path
+              'assets/notification.png',
               height: 250,
               width: 250,
             ),
@@ -56,9 +120,7 @@ class NotificationPromptScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                onPressed: () {
-                  // Logic for turning on notifications
-                },
+                onPressed: () => _requestNotificationPermission(context),
                 child: const Text(
                   'Turn On Notifications',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -74,7 +136,6 @@ class NotificationPromptScreen extends StatelessWidget {
                     builder: (context) => const CompletionProcessScreen(),
                   ),
                 );
-                // Logic for "Remind me later"
               },
               child: const Text(
                 'Remind me later',
@@ -87,4 +148,8 @@ class NotificationPromptScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+extension on AndroidFlutterLocalNotificationsPlugin? {
+  requestPermission() {}
 }
