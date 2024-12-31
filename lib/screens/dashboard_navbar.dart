@@ -10,133 +10,126 @@ class DashboardNavbarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          const Color(0xFFF3F5F8), // Background color similar to the screenshot
+      backgroundColor: Colors.grey[50],
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Hi, Sifat',
+                      const Text(
+                        'Hi, Jenny Wilson',
                         style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(height: 5),
                       Text(
                         'Here is your activity today,',
                         style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.grey,
+                          fontSize: 16,
+                          color: Colors.grey[600],
                         ),
                       ),
                     ],
                   ),
-                  Icon(
-                    Icons.notifications_outlined,
-                    size: 30,
+                  IconButton(
+                    icon: const Icon(Icons.notifications_outlined, size: 28),
+                    onPressed: () {},
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
-
-              SizedBox(
-                height: 270, // Fixed height to prevent overflow
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 20,
-                  childAspectRatio: 1.5, // Keep a 2:1 ratio for the cards
-                  children: [
-                    _buildGridCard('89%', 'Presence', Colors.orange),
-                    _buildGridCard('100%', 'Completeness', Colors.blue),
-                    _buildGridCard('18', 'Assignments', Colors.red),
-                    _buildGridCard('12', 'Total Subject', Colors.amber),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Icon row (Course, Subjects, Class, Presence)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              const SizedBox(height: 24),
+              GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 1.5,
                 children: [
-                  // Course Icon with Navigation
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CourseScreenView()));
-                    },
-                    child: _buildIconLabel(
-                        Icons.book_outlined, 'Course', Colors.teal),
+                  _buildStatCard('89%', 'Presence', Colors.orange),
+                  _buildStatCard('100%', 'Completeness', Colors.blue),
+                  _buildStatCard('18', 'Assignments', Colors.red),
+                  _buildStatCard('12', 'Total Subject', Colors.amber),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildNavItem(
+                    context,
+                    'Course',
+                    Icons.book_outlined,
+                    Colors.indigo,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CourseScreenView(),
+                      ),
+                    ),
                   ),
-
-                  // Subjects Icon with Navigation
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SubjecScreenView())),
-                    child: _buildIconLabel(
-                        Icons.school_outlined, 'Subjects', Colors.blue),
+                  _buildNavItem(
+                    context,
+                    'Subjects',
+                    Icons.school_outlined,
+                    Colors.blue,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SubjecScreenView(),
+                      ),
+                    ),
                   ),
-
-                  // Class Icon with Navigation
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ClassScreenView())),
-                    child: _buildIconLabel(
-                        Icons.class_outlined, 'Class', Colors.orange),
+                  _buildNavItem(
+                    context,
+                    'Class',
+                    Icons.class_outlined,
+                    Colors.orange,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ClassScreenView(),
+                      ),
+                    ),
                   ),
-
-                  // Presence Icon with Navigation
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PresenceScreenView())),
-                    child: _buildIconLabel(
-                        Icons.check_circle_outline, 'Presence', Colors.green),
+                  _buildNavItem(
+                    context,
+                    'Presence',
+                    Icons.check_circle_outline,
+                    Colors.green,
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PresenceScreenView(),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 30),
-
-              // Schedule Section
+              const SizedBox(height: 24),
               const Text(
                 'Schedule',
                 style: TextStyle(
                   fontSize: 20,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 15),
-              // Schedule bar
-              Expanded(
+              const SizedBox(height: 16),
+              SizedBox(
+                height: 100,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-                    _buildScheduleItem('LLB', Colors.orange),
-                    _buildScheduleItem('LAW', Colors.red),
-                    _buildScheduleItem('English', Colors.blue),
-                    _buildScheduleItem('Sociology', Colors.blue),
-                    _buildScheduleItem('CSE', Colors.blue),
-                    _buildScheduleItem('Architecture', Colors.blue),
+                    _buildScheduleItem('Economy', Colors.amber, '7-8'),
+                    _buildScheduleItem('Geography', Colors.blue, '9-10'),
+                    _buildScheduleItem('English', Colors.indigo, '11-12'),
                   ],
                 ),
               ),
@@ -147,18 +140,17 @@ class DashboardNavbarView extends StatelessWidget {
     );
   }
 
-  // Function to build grid cards
-  Widget _buildGridCard(String value, String label, Color color) {
+  Widget _buildStatCard(String value, String label, Color color) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade200,
-            blurRadius: 10,
-            spreadRadius: 5,
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 6,
           ),
         ],
       ),
@@ -169,64 +161,79 @@ class DashboardNavbarView extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontSize: 30,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(fontSize: 16, color: Colors.grey),
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
           ),
         ],
       ),
     );
   }
 
-  // Function to build icon with label
-  Widget _buildIconLabel(IconData icon, String label, Color color) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            shape: BoxShape.circle,
+  Widget _buildNavItem(BuildContext context, String label, IconData icon,
+      Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 24),
           ),
-          child: Icon(
-            icon,
-            size: 30,
-            color: color,
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 14,
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.grey),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  // Function to build schedule items
-  Widget _buildScheduleItem(String subject, Color color) {
+  Widget _buildScheduleItem(String subject, Color color, String time) {
     return Container(
-      margin: const EdgeInsets.only(right: 20),
-      width: 100,
-      padding: const EdgeInsets.all(15),
+      width: 120,
+      margin: const EdgeInsets.only(right: 16),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Center(
-        child: Text(
-          subject,
-          style: TextStyle(
-            color: color,
-            fontWeight: FontWeight.bold,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            subject,
+            style: TextStyle(
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
+          const SizedBox(height: 4),
+          Text(
+            time,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+            ),
+          ),
+        ],
       ),
     );
   }
