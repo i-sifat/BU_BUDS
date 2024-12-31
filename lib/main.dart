@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import shared_preferences
 import 'screens/onboarding_screen/initial_page.dart';
-// Replace with your actual path
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
