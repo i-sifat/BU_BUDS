@@ -68,10 +68,11 @@ class MenuDetailSheet extends StatelessWidget {
                     title: Text(subItem.title),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
-                      Navigator.pop(context);
                       if (subItem.link != null) {
+                        Navigator.pop(context);
                         _launchURL(subItem.link!);
                       } else if (subItem.onTap != null) {
+                        Navigator.pop(context);
                         subItem.onTap!();
                       }
                     },
