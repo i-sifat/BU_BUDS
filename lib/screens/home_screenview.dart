@@ -1,6 +1,6 @@
+import 'package:bubuds/navbar_items/menu_navigation_view.dart';
 import 'package:flutter/material.dart';
 import '../navbar_items/dashboard/dashboard_navbar.dart';
-import '../navbar_items/menu/menu_navbar.dart';
 import '../navbar_items/person/person_navbar.dart';
 import '../navbar_items/schedule/schedule_navbar.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +19,7 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
   final List<Widget> _pages = [
     const DashboardNavbarView(),
     const ScheduleNavbarView(),
-    const MenuNavigationbarView(),
+    const MenuNavigationView(),
     PersonScreenView(),
   ];
 

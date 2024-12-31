@@ -1,22 +1,16 @@
-import 'package:bubuds/models/menu_itam.dart';
+import 'package:bubuds/widgets/menu/menu_detail_sheet.dart';
+import 'package:bubuds/widgets/menu/menu_grid_item.dart';
+import 'package:bubuds/widgets/menu/menu_item.dart';
 import 'package:flutter/material.dart';
 
-import 'package:url_launcher/url_launcher.dart';
-
-class MenuNavigationbarView extends StatelessWidget {
-  const MenuNavigationbarView({super.key});
-
-  Future<void> _launchURL(String url) async {
-    final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri)) {
-      throw Exception('Could not launch $url');
-    }
-  }
+class MenuNavigationView extends StatelessWidget {
+  const MenuNavigationView({super.key});
 
   List<MenuItem> get menuItems => [
         MenuItem(
           title: 'About',
           icon: Icons.info_outline,
+          backgroundColor: const Color(0xFFFCECEC), // Light pink
           subItems: [
             SubMenuItem(title: 'ABOUT BU'),
             SubMenuItem(title: 'Mission & Vision'),
@@ -28,6 +22,7 @@ class MenuNavigationbarView extends StatelessWidget {
         MenuItem(
           title: 'Academics',
           icon: Icons.school_outlined,
+          backgroundColor: const Color(0xFFFFEDE0), // Light orange
           subItems: [
             SubMenuItem(title: 'Faculty of Science Engineering & Technology'),
             SubMenuItem(title: 'Faculty of Arts Social Science & Law'),
@@ -38,6 +33,7 @@ class MenuNavigationbarView extends StatelessWidget {
         MenuItem(
           title: 'Admission',
           icon: Icons.person_add_outlined,
+          backgroundColor: const Color(0xFFEEF3FF), // Light blue
           subItems: [
             SubMenuItem(title: 'Academic Calendar'),
             SubMenuItem(title: 'Academic Policy & Tuition Fees'),
@@ -48,6 +44,7 @@ class MenuNavigationbarView extends StatelessWidget {
         MenuItem(
           title: 'Administration',
           icon: Icons.admin_panel_settings_outlined,
+          backgroundColor: const Color(0xFFE8F7F0), // Light green
           subItems: [
             SubMenuItem(title: 'The Vice-Chancellor'),
             SubMenuItem(title: 'Pro-Vice-Chancellor'),
@@ -60,6 +57,7 @@ class MenuNavigationbarView extends StatelessWidget {
         MenuItem(
           title: 'News & Events',
           icon: Icons.event_note_outlined,
+          backgroundColor: const Color(0xFFE8F7F0), // Light green
           subItems: [
             SubMenuItem(title: 'All Events'),
             SubMenuItem(title: 'All News'),
@@ -72,106 +70,60 @@ class MenuNavigationbarView extends StatelessWidget {
           ],
         ),
         MenuItem(
-          title: 'Certificate Verification',
+          title: 'Certificate',
           icon: Icons.verified_outlined,
+          backgroundColor: const Color(0xFFFFF8E7), // Light yellow
           externalLink:
               'https://busmsportal.azurewebsites.net/Public/CertificateValidation.aspx',
         ),
         MenuItem(
-          title: 'Online Portal',
+          title: 'Portal',
           icon: Icons.login_outlined,
+          backgroundColor: const Color(0xFFEEF3FF), // Light blue
           externalLink: 'https://busmsportal.azurewebsites.net/LoginPage.aspx',
         ),
       ];
+
+  void _showMenuDetails(BuildContext context, MenuItem item) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (_, controller) => MenuDetailSheet(item: item),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Menu'),
+        leading: const BackButton(),
+        title: const Text(
+          'Menu',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
         centerTitle: true,
       ),
-      body: ListView.builder(
+      body: GridView.builder(
         padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
         itemCount: menuItems.length,
         itemBuilder: (context, index) {
           final item = menuItems[index];
-          return Card(
-            elevation: 2,
-            margin: const EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              leading: Icon(item.icon, color: Colors.red),
-              title: Text(item.title),
-              trailing: item.subItems != null
-                  ? const Icon(Icons.arrow_forward_ios)
-                  : null,
-              onTap: () {
-                if (item.externalLink != null) {
-                  _launchURL(item.externalLink!);
-                } else if (item.subItems != null) {
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) => SubMenuSheet(
-                      title: item.title,
-                      subItems: item.subItems!,
-                    ),
-                  );
-                }
-              },
-            ),
+          return MenuGridItem(
+            item: item,
+            onTap: () => _showMenuDetails(context, item),
           );
         },
-      ),
-    );
-  }
-}
-
-class SubMenuSheet extends StatelessWidget {
-  final String title;
-  final List<SubMenuItem> subItems;
-
-  const SubMenuSheet({
-    super.key,
-    required this.title,
-    required this.subItems,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const Divider(),
-          Expanded(
-            child: ListView.builder(
-              itemCount: subItems.length,
-              itemBuilder: (context, index) {
-                final subItem = subItems[index];
-                return ListTile(
-                  title: Text(subItem.title),
-                  onTap: () {
-                    Navigator.pop(context);
-                    if (subItem.onTap != null) {
-                      subItem.onTap!();
-                    }
-                    if (subItem.link != null) {
-                      launchUrl(Uri.parse(subItem.link!));
-                    }
-                  },
-                );
-              },
-            ),
-          ),
-        ],
       ),
     );
   }

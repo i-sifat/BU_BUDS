@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class MenuItem {
   final String title;
   final IconData icon;
+  final Color backgroundColor;
   final List<SubMenuItem>? subItems;
   final String? externalLink;
 
-  const MenuItem({
+  MenuItem({
     required this.title,
     required this.icon,
+    required this.backgroundColor,
     this.subItems,
     this.externalLink,
   });
@@ -17,9 +19,9 @@ class MenuItem {
 class SubMenuItem {
   final String title;
   final String? link;
-  final Function()? onTap;
+  final VoidCallback? onTap;
 
-  const SubMenuItem({
+  SubMenuItem({
     required this.title,
     this.link,
     this.onTap,
