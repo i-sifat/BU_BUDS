@@ -1,123 +1,143 @@
+import 'package:bubuds/navbar_items/person/about_screen.dart';
+import 'package:bubuds/navbar_items/person/profile_screen.dart';
+import 'package:bubuds/utils/colors.dart';
+import 'package:bubuds/utils/typography.dart';
 import 'package:flutter/material.dart';
 
-enum TopicKeyEnum { Profile, Account, Setting, About }
-
-typedef TopicMap = Map<TopicKeyEnum, IconData>;
-
 class PersonScreenView extends StatelessWidget {
-  // List of topics with corresponding icons
-  final List<TopicMap> topics = [
-    {TopicKeyEnum.Profile: Icons.person_outline},
-    {TopicKeyEnum.Account: Icons.account_balance_wallet_outlined},
-    {TopicKeyEnum.Setting: Icons.settings_outlined},
-    {TopicKeyEnum.About: Icons.info_outline},
-  ];
-
   PersonScreenView({super.key});
+
+  final List<Map<String, dynamic>> menuItems = [
+    {
+      'title': 'Profile',
+      'icon': Icons.person_outline,
+      'route': const ProfileScreen(),
+    },
+    {
+      'title': 'Account',
+      'icon': Icons.account_balance_wallet_outlined,
+      'route': null,
+    },
+    {
+      'title': 'Setting',
+      'icon': Icons.settings_outlined,
+      'route': null,
+    },
+    {
+      'title': 'About',
+      'icon': Icons.info_outline,
+      'route': const AboutScreen(),
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("Study", style: TextStyle(color: Colors.black)),
+        title: Text(
+          "Study",
+          style: AppTypography.h3.copyWith(color: AppColors.black),
+        ),
         centerTitle: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         elevation: 0,
-        leading: const Icon(Icons.circle, color: Colors.red, size: 30),
+        leading: const Icon(Icons.circle, color: AppColors.primary, size: 30),
       ),
       body: SafeArea(
         child: Column(
           children: [
             // Profile Section
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Container(
+              padding: const EdgeInsets.all(16),
+              color: AppColors.white,
               child: Row(
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 30,
-                    backgroundImage: AssetImage(
-                        'assets/addphoto.png'), // Replace with the correct image path
+                    backgroundImage: AssetImage('assets/addphoto.png'),
                   ),
-                  SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome",
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                      Text(
-                        "Marvin McKinney",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Welcome",
+                          style: AppTypography.bodyMedium.copyWith(
+                            color: AppColors.grey,
+                          ),
+                        ),
+                        Text(
+                          "Marvin McKinney",
+                          style: AppTypography.h3,
+                        ),
+                      ],
+                    ),
                   ),
-                  Spacer(),
-                  Icon(Icons.arrow_forward_ios, color: Colors.grey)
+                  Icon(Icons.arrow_forward_ios,
+                      color: AppColors.grey, size: 20),
                 ],
               ),
             ),
-            const Divider(color: Colors.grey, thickness: 1),
+            const Divider(height: 1),
 
-            // List of options (Profile, Account, etc.)
+            // Menu Items
             Expanded(
-              child: ListView.builder(
-                itemCount: topics.length,
+              child: ListView.separated(
+                itemCount: menuItems.length,
+                separatorBuilder: (context, index) => const Divider(height: 1),
                 itemBuilder: (context, index) {
-                  // Extract the topic name and icon from the map
-                  String topicName = topics[index].keys.first.name;
-                  IconData icon = topics[index].values.first;
-
-                  return Column(
-                    children: [
-                      ListTile(
-                        leading: CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.blue[50],
-                          child: Icon(icon, color: Colors.blue),
-                        ),
-                        title: Text(
-                          topicName,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
+                  final item = menuItems[index];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      radius: 25,
+                      backgroundColor:
+                          AppColors.secondaryLight.withOpacity(0.2),
+                      child: Icon(item['icon'],
+                          color: AppColors.secondary, size: 24),
+                    ),
+                    title: Text(
+                      item['title'],
+                      style: AppTypography.bodyLarge.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    trailing: const Icon(Icons.arrow_forward_ios,
+                        color: AppColors.grey, size: 18),
+                    onTap: () {
+                      if (item['route'] != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => item['route'],
                           ),
-                        ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.grey,
-                          size: 18,
-                        ),
-                      ),
-                      const Divider(
-                        thickness: 0.1,
-                        color: Colors.grey,
-                      ),
-                    ],
+                        );
+                      }
+                    },
                   );
                 },
               ),
             ),
 
-            // Help Section (Red banner)
+            // Help Section
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.red[400],
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.headset_mic, color: Colors.white, size: 30),
-                    SizedBox(width: 16),
+                    const Icon(Icons.headset_mic,
+                        color: AppColors.white, size: 30),
+                    const SizedBox(width: 16),
                     Text(
                       "How can we help you?",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
+                      style: AppTypography.bodyLarge.copyWith(
+                        color: AppColors.white,
                       ),
                     ),
                   ],
@@ -125,42 +145,40 @@ class PersonScreenView extends StatelessWidget {
               ),
             ),
 
-            // Footer Section (Privacy Policy, Terms, Language)
+            // Footer
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Privacy Policy",
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.greyDark,
                     ),
                   ),
                   Text(
                     "Terms",
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 14,
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.greyDark,
                     ),
                   ),
                   Row(
                     children: [
                       Text(
                         "English",
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          fontSize: 14,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.greyDark,
                         ),
                       ),
-                      const Icon(Icons.keyboard_arrow_down, color: Colors.grey)
+                      const Icon(Icons.keyboard_arrow_down,
+                          color: AppColors.grey, size: 20),
                     ],
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 8),
           ],
         ),
       ),
