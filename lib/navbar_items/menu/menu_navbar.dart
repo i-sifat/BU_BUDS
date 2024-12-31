@@ -12,11 +12,26 @@ class MenuNavigationView extends StatelessWidget {
           icon: Icons.info_outline,
           backgroundColor: const Color(0xFFFCECEC),
           subItems: [
-            SubMenuItem(title: 'ABOUT BU'),
-            SubMenuItem(title: 'Mission & Vision'),
-            SubMenuItem(title: 'The Founder'),
-            SubMenuItem(title: 'The Board of Trustees'),
-            SubMenuItem(title: 'Career'),
+            SubMenuItem(
+              title: 'ABOUT BU',
+              link: 'https://bu.edu.bd/information/',
+            ),
+            SubMenuItem(
+              title: 'Mission & Vision',
+              link: 'https://bu.edu.bd/mission-vision/',
+            ),
+            SubMenuItem(
+              title: 'The Founder',
+              link: 'https://bu.edu.bd/message-from-the-founder-2/',
+            ),
+            SubMenuItem(
+              title: 'The Board of Trustees',
+              link: 'https://bu.edu.bd/board-of-trustees/',
+            ),
+            SubMenuItem(
+              title: 'Career',
+              link: 'https://bu.edu.bd/career/',
+            ),
           ],
         ),
         MenuItem(
@@ -35,10 +50,26 @@ class MenuNavigationView extends StatelessWidget {
           icon: Icons.person_add_outlined,
           backgroundColor: const Color(0xFFEEF3FF),
           subItems: [
-            SubMenuItem(title: 'Academic Calendar'),
-            SubMenuItem(title: 'Academic Policy & Tuition Fees'),
-            SubMenuItem(title: 'Offered Degrees'),
-            SubMenuItem(title: 'Rules & Regulations'),
+            SubMenuItem(
+              title: 'Academic Calendar',
+              link: 'https://bu.edu.bd/calendar/',
+            ),
+            SubMenuItem(
+              title: 'Academic Policy',
+              link: 'https://bu.edu.bd/academic-policies/',
+            ),
+            SubMenuItem(
+              title: 'Tuition Fees',
+              link: 'https://bu.edu.bd/course-tuition-fees/',
+            ),
+            SubMenuItem(
+              title: 'Offered Degrees',
+              link: 'https://bu.edu.bd/offered-degrees/',
+            ),
+            SubMenuItem(
+              title: 'Rules & Regulations',
+              link: 'https://bu.edu.bd/rules-regulation/',
+            ),
           ],
         ),
         MenuItem(
