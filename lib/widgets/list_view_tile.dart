@@ -1,5 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import '../utils/colors.dart';
+import '../utils/typography.dart';
 
 class CustomListViewItem extends StatelessWidget {
   final String title;
@@ -19,8 +20,18 @@ class CustomListViewItem extends StatelessWidget {
       leading: CircleAvatar(
         backgroundImage: image,
       ),
-      title: Text(title),
-      subtitle: Text(subtitle),
+      title: Text(
+        title,
+        style: AppTypography.bodyLarge.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: AppTypography.bodyMedium.copyWith(
+          color: AppColors.grey,
+        ),
+      ),
     );
   }
 }
