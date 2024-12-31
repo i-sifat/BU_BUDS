@@ -1,4 +1,4 @@
-import 'package:bu_buds/screens/course/my_coursescreen.dart';
+import 'package:bubuds/screens/course/my_coursescreen.dart';
 import 'package:flutter/material.dart';
 
 class CourseDetailsView extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:bu_buds/screens/onboarding_screen/request_notification.dart';
+import 'package:bubuds/screens/onboarding_screen/request_notification.dart';
 import 'package:flutter/material.dart';
 
 class ChoosingSubjectView extends StatefulWidget {

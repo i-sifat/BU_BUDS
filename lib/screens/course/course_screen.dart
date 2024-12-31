@@ -1,5 +1,5 @@
-import 'package:bu_buds/screens/course/course_details.dart';
-import 'package:bu_buds/widgets/list_view_tile.dart';
+import 'package:bubuds/screens/course/course_details.dart';
+import 'package:bubuds/widgets/list_view_tile.dart';
 import 'package:flutter/material.dart';
 
 class CourseScreenView extends StatelessWidget {

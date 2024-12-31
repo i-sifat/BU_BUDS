@@ -1,4 +1,4 @@
-import 'package:bu_buds/widgets/onboarding_info.dart';
+import 'package:bubuds/widgets/onboarding_info.dart';
 
 class OnboardingData {
   List<OnboardingInfo> items = [

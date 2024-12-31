@@ -1,5 +1,5 @@
-import 'package:bu_buds/screens/onboarding_screen/onboarding_page.dart';
-import 'package:bu_buds/widgets/buttons.dart';
+import 'package:bubuds/screens/onboarding_screen/onboarding_page.dart';
+import 'package:bubuds/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
 class InitialPageView extends StatefulWidget {

@@ -1,7 +1,7 @@
+import 'package:bubuds/screens/signup_page.dart';
+import 'package:bubuds/widgets/color.dart';
+import 'package:bubuds/widgets/onboarding_data.dart';
 import 'package:flutter/material.dart';
-import 'package:bu_buds/screens/signup_page.dart';
-import 'package:bu_buds/widgets/color.dart';
-import 'package:bu_buds/widgets/onboarding_data.dart';
 
 class OnboardingPageView extends StatefulWidget {
   const OnboardingPageView({super.key});

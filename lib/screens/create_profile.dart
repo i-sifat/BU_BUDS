@@ -1,6 +1,5 @@
-import 'package:bu_buds/widgets/buttons.dart';
-import 'package:bu_buds/widgets/text_fields.dart';
-
+import 'package:bubuds/widgets/buttons.dart';
+import 'package:bubuds/widgets/text_fields.dart';
 import 'package:flutter/material.dart';
 
 class UserProfileView extends StatelessWidget {
