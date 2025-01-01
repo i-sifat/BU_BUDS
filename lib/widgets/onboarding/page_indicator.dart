@@ -1,5 +1,5 @@
+import 'package:bubuds/utils/colors.dart';
 import 'package:flutter/material.dart';
-import '../../utils/colors.dart';
 
 class PageIndicator extends StatelessWidget {
   final int currentIndex;

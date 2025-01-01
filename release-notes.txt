@@ -1,0 +1,15 @@
+Initial release of BU BUDS app
+
+Features:
+- Added Menu Items
+- Colors Profile Corrected
+- Added Fonts
+- Add Links
+- Bug Fixes
+- Many More
+
+Technical updates:
+- Flutter 3.19.0
+- Material 3 design
+- Performance optimizations
+- Bug fixes
