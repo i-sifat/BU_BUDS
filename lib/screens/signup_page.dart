@@ -157,7 +157,6 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Text("+880"),
                     const SizedBox(width: 8),
                     Expanded(
                       child: TextFormField(

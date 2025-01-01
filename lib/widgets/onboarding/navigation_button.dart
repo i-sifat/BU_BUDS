@@ -1,7 +1,6 @@
-```dart
+import 'package:bubuds/utils/colors.dart';
+import 'package:bubuds/utils/typography.dart';
 import 'package:flutter/material.dart';
-import '../../utils/colors.dart';
-import '../../utils/typography.dart';
 
 class OnboardingNavigationButton extends StatelessWidget {
   final String text;
@@ -35,4 +34,3 @@ class OnboardingNavigationButton extends StatelessWidget {
     );
   }
 }
-```

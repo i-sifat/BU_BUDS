@@ -36,7 +36,7 @@ class PersonScreenView extends StatelessWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
-          "Study",
+          "Bu Buds",
           style: AppTypography.h3.copyWith(color: AppColors.black),
         ),
         centerTitle: true,
