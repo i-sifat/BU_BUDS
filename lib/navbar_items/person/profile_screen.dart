@@ -1,159 +1,131 @@
 import 'package:flutter/material.dart';
+import '../../utils/colors.dart';
+import '../../utils/typography.dart';
+import '../../widgets/common/app_bar.dart';
+import '../../widgets/dialogs/logout_dialog.dart';
+import '../../screens/signup_page.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class ProfileScreen extends StatelessWidget {
+  final String userName;
 
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
+  const ProfileScreen({
+    super.key,
+    required this.userName,
+  });
 
-class _ProfileScreenState extends State<ProfileScreen> {
-  final _formKey = GlobalKey<FormState>();
-  bool _isMale = true;
-
-  void _showUpdateSuccess() {
-    showDialog(
+  Future<void> _showLogoutDialog(BuildContext context) async {
+    final bool? shouldLogout = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Success'),
-        content: const Text('Profile updated successfully!'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
+      builder: (context) => const LogoutDialog(),
     );
+
+    if (shouldLogout == true && context.mounted) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const SignUpDetails()),
+        (route) => false,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-      ),
+      appBar: const CustomAppBar(title: 'Profile'),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Stack(
-                  children: [
-                    const CircleAvatar(
-                      radius: 50,
-                      backgroundImage: AssetImage('assets/addphoto.png'),
-                    ),
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.blue,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              _buildTextField('Name', 'Marvin McKinney'),
-              _buildTextField('Email', 'marvin@email.com'),
-              _buildTextField('Date of birth', '11/08/1997'),
-              _buildTextField('Phone Number', '702-889-5347'),
-              _buildTextField('Student ID', '#87654', enabled: false),
-              const SizedBox(height: 16),
-              const Text('Gender'),
-              Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile(
-                      title: const Text('Male'),
-                      value: true,
-                      groupValue: _isMale,
-                      onChanged: (value) => setState(() => _isMale = value!),
-                    ),
-                  ),
-                  Expanded(
-                    child: RadioListTile(
-                      title: const Text('Female'),
-                      value: false,
-                      groupValue: _isMale,
-                      onChanged: (value) => setState(() => _isMale = !value!),
-                    ),
-                  ),
-                ],
-              ),
-              _buildTextField(
-                  'Address', '1106 Sunrise Road Las Vegas, NV 89102',
-                  maxLines: 3),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _showUpdateSuccess();
-                    }
-                  },
-                  child: const Text(
-                    'Update Profile',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+            _buildProfileHeader(),
+            const Divider(height: 1),
+            _buildProfileMenu(context),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildTextField(String label, String initialValue,
-      {bool enabled = true, int maxLines = 1}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildProfileHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      color: Colors.white,
+      child: Row(
         children: [
-          Text(label),
-          const SizedBox(height: 8),
-          TextFormField(
-            initialValue: initialValue,
-            enabled: enabled,
-            maxLines: maxLines,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey.shade100,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide.none,
-              ),
+          const CircleAvatar(
+            radius: 30,
+            backgroundImage: AssetImage('assets/addphoto.png'),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userName,
+                  style: AppTypography.h3,
+                ),
+                Text(
+                  'Student',
+                  style: AppTypography.bodyMedium.copyWith(color: Colors.grey),
+                ),
+              ],
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'This field is required';
-              }
-              return null;
-            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.arrow_forward_ios, size: 20),
+            onPressed: () {},
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildProfileMenu(BuildContext context) {
+    return Column(
+      children: [
+        _buildMenuItem(
+          icon: Icons.person_outline,
+          title: 'Personal Information',
+          onTap: () {},
+        ),
+        _buildMenuItem(
+          icon: Icons.notifications_outlined,
+          title: 'Notifications',
+          onTap: () {},
+        ),
+        _buildMenuItem(
+          icon: Icons.security_outlined,
+          title: 'Security',
+          onTap: () {},
+        ),
+        _buildMenuItem(
+          icon: Icons.help_outline,
+          title: 'Help Center',
+          onTap: () {},
+        ),
+        _buildMenuItem(
+          icon: Icons.logout,
+          title: 'Logout',
+          textColor: AppColors.error,
+          onTap: () => _showLogoutDialog(context),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMenuItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color? textColor,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: textColor ?? Colors.black),
+      title: Text(
+        title,
+        style: AppTypography.bodyLarge.copyWith(color: textColor),
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 20),
+      onTap: onTap,
     );
   }
 }

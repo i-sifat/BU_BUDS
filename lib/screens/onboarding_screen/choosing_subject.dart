@@ -1,155 +1,196 @@
-import 'package:bubuds/screens/onboarding_screen/request_notification.dart';
 import 'package:flutter/material.dart';
+import '../../utils/colors.dart';
+import '../../utils/typography.dart';
+import 'request_notification.dart';
 
 class ChoosingSubjectView extends StatefulWidget {
-  const ChoosingSubjectView({super.key});
+  final String userName;
+
+  const ChoosingSubjectView({
+    super.key,
+    required this.userName,
+  });
 
   @override
   State<ChoosingSubjectView> createState() => _ChoosingSubjectViewState();
 }
 
 class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
-  final List<String> topics = [
-    'CSE',
-    'Sociology',
-    'English',
-    'Law',
-    'LLB',
+  final List<Map<String, dynamic>> topics = [
+    {
+      'title': 'Mathematics',
+      'subtitle': 'Geometry, Algorithm',
+      'icon': Icons.functions,
+      'color': Colors.red[100],
+      'selected': false,
+    },
+    {
+      'title': 'Economy',
+      'subtitle': 'Stock, Property, News',
+      'icon': Icons.show_chart,
+      'color': Colors.orange[100],
+      'selected': false,
+    },
+    {
+      'title': 'English',
+      'subtitle': 'Grammar, Literature, Writing',
+      'icon': Icons.book,
+      'color': Colors.blue[100],
+      'selected': false,
+    },
+    {
+      'title': 'Biology',
+      'subtitle': 'Anatomy, Genetics, Ecology',
+      'icon': Icons.biotech,
+      'color': Colors.green[100],
+      'selected': false,
+    },
+    {
+      'title': 'Geography',
+      'subtitle': 'Maps, Climate, Landforms',
+      'icon': Icons.public,
+      'color': Colors.purple[100],
+      'selected': false,
+    },
   ];
 
-  final List<String> subtexts = [
-    "Technology, Programming, Engineering",
-    "Humanities, Social Sciences, Research",
-    "Arts, Literature, Communication",
-    "Legal System, Justice, Government",
-    "Legal Education, Career Paths, Legal Profession"
-  ];
-
-  final List<bool> _selectedTopics = List.generate(5, (index) => false);
+  int get selectedCount => topics.where((topic) => topic['selected']).length;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              // Skip button logic
-            },
-            child: const Text(
+            onPressed: () {},
+            child: Text(
               'Skip',
-              style: TextStyle(color: Colors.black, fontSize: 16),
+              style: AppTypography.bodyMedium.copyWith(color: Colors.black),
             ),
           ),
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
-            const Text(
+            Text(
               'Choose your topic interest',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+              style: AppTypography.h2,
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sit enim, ac amet ultrices.',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+            Text(
+              'Select at least 3 topics you are interested in',
+              style: AppTypography.bodyMedium.copyWith(color: Colors.grey),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 32),
             Expanded(
-              child: ListView.builder(
+              child: ListView.separated(
                 itemCount: topics.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 16),
                 itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundColor: Colors.grey[200],
-                            // Placeholder for icon, update with appropriate image or icon
-                            child:
-                                const Icon(Icons.subject, color: Colors.blue),
-                          ),
-                          title: Text(
-                            topics[index],
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          subtitle: Text(
-                            subtexts[index],
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.grey),
-                          ),
-                          trailing: Transform.scale(
-                            scale: 1.5, // Increase size of the checkbox
-                            child: Checkbox(
-                              value: _selectedTopics[index],
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedTopics[index] = value!;
-                                });
-                              },
-                              activeColor: Colors.blue,
-                              shape: const CircleBorder(), // Circular checkbox
-                            ),
-                          ),
+                  final topic = topics[index];
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        topic['selected'] = !topic['selected'];
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: topic['selected']
+                              ? AppColors.primary
+                              : Colors.grey[200]!,
                         ),
                       ),
-                      const Divider(
-                        thickness: 1,
-                        color: Colors.grey, // Subtle divider color
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: topic['color'],
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(topic['icon'], color: Colors.black),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  topic['title'],
+                                  style: AppTypography.bodyLarge.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  topic['subtitle'],
+                                  style: AppTypography.bodySmall.copyWith(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (topic['selected'])
+                            const Icon(
+                              Icons.check_circle,
+                              color: AppColors.primary,
+                            ),
+                        ],
                       ),
-                    ],
+                    ),
                   );
                 },
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NotificationPromptScreen(),
-                    ),
-                  );
-                  // Continue button logic
-                },
-                child: const Text(
-                  'Continue',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                onPressed: selectedCount >= 3
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotificationPromptScreen(
+                              userName: widget.userName,
+                              selectedTopics: topics
+                                  .where((topic) => topic['selected'])
+                                  .map((topic) => topic['title'] as String)
+                                  .toList(),
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
+                child: Text(
+                  'Continue (${selectedCount}/3)',
+                  style: AppTypography.buttonLarge,
                 ),
               ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),

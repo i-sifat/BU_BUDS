@@ -1,12 +1,19 @@
-import 'package:bubuds/navbar_items/menu_navigation_view.dart';
+import 'package:bubuds/navbar_items/person/profile_screen.dart';
 import 'package:flutter/material.dart';
-import '../navbar_items/dashboard/dashboard_navbar.dart';
-import '../navbar_items/person/person_navbar.dart';
-import '../navbar_items/schedule/schedule_navbar.dart';
 import 'package:flutter/services.dart';
+import '../navbar_items/dashboard/dashboard_navbar.dart';
+import '../navbar_items/menu/menu_navbar.dart';
+import '../navbar_items/schedule/schedule_navbar.dart';
 
 class MyHomeScreenView extends StatefulWidget {
-  const MyHomeScreenView({super.key});
+  final String userName;
+  final List<bool> selectedTopics;
+
+  const MyHomeScreenView({
+    super.key,
+    required this.userName,
+    required this.selectedTopics,
+  });
 
   @override
   State<MyHomeScreenView> createState() => _MyHomeScreenViewState();
@@ -14,63 +21,24 @@ class MyHomeScreenView extends StatefulWidget {
 
 class _MyHomeScreenViewState extends State<MyHomeScreenView> {
   int _selectedIndex = 0;
-
-  // List of pages corresponding to each BottomNavigationBar item
-  final List<Widget> _pages = [
-    const DashboardNavbarView(),
-    const ScheduleNavbarView(),
-    const MenuNavigationView(),
-    PersonScreenView(),
-  ];
-
-  // Method to handle bottom navigation bar tap
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  late final List<Widget> _pages;
 
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        bool shouldExit = await _showExitConfirmationDialog(context);
-        return shouldExit;
-      },
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF3F5F8),
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.grid_view_rounded),
-              label: 'Dashboard',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today_outlined),
-              label: 'Schedule',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.menu),
-              label: 'Menu',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              label: 'Profile',
-            ),
-          ],
-          selectedItemColor: Colors.teal,
-          unselectedItemColor: Colors.grey,
-          showUnselectedLabels: true,
-        ),
-      ),
-    );
+  void initState() {
+    super.initState();
+    _pages = [
+      const DashboardNavbarView(),
+      const ScheduleNavbarView(),
+      const MenuNavigationView(),
+      ProfileScreen(userName: widget.userName),
+    ];
   }
 
-// Function to show confirmation dialog
-  Future<bool> _showExitConfirmationDialog(BuildContext context) async {
+  void _onItemTapped(int index) {
+    setState(() => _selectedIndex = index);
+  }
+
+  Future<bool> _onWillPop() async {
     return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -82,12 +50,52 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
                 child: const Text('Cancel'),
               ),
               TextButton(
-                onPressed: () => SystemNavigator.pop(), // Closes the app
+                onPressed: () => SystemNavigator.pop(),
                 child: const Text('OK'),
               ),
             ],
           ),
         ) ??
-        false; // Return false if dialog is dismissed
+        false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF3F5F8),
+        body: _pages[_selectedIndex],
+        bottomNavigationBar: _buildBottomNavigationBar(),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.grid_view_rounded),
+          label: 'Dashboard',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.calendar_today_outlined),
+          label: 'Schedule',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.menu),
+          label: 'Menu',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline),
+          label: 'Profile',
+        ),
+      ],
+      selectedItemColor: Colors.teal,
+      unselectedItemColor: Colors.grey,
+      showUnselectedLabels: true,
+    );
   }
 }

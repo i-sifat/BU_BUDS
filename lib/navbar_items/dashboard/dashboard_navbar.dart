@@ -1,7 +1,7 @@
 import 'package:bubuds/screens/classcreen/class_screen.dart';
 import 'package:bubuds/screens/course/course_screen.dart';
 import 'package:bubuds/screens/presence/presence_screen.dart';
-import 'package:bubuds/screens/subject_screen.dart/subject_screen.dart';
+import 'package:bubuds/screens/subject_screen/subject_screen.dart';
 import 'package:flutter/material.dart';
 
 class DashboardNavbarView extends StatelessWidget {

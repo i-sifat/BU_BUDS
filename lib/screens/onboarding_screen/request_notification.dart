@@ -1,70 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'completetion_screen.dart';
+import 'package:bubuds/services/notifications_service.dart';
+import 'package:bubuds/screens/onboarding_screen/completetion_screen.dart';
 
 class NotificationPromptScreen extends StatelessWidget {
-  const NotificationPromptScreen({super.key});
+  final String userName;
+  final List<bool> selectedTopics;
 
-  Future<void> _requestNotificationPermission(BuildContext context) async {
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+  const NotificationPromptScreen({
+    super.key,
+    required this.userName,
+    required this.selectedTopics,
+  });
 
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
-      requestSoundPermission: true,
-      requestBadgePermission: true,
-      requestAlertPermission: true,
-    );
-
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
-
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) {
-        // Handle notification tap
-      },
-    );
-
-    // Request permission
-    final bool? granted = await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestPermission();
-
-    if (granted != null && granted) {
-      // Show a test notification
-      const AndroidNotificationDetails androidPlatformChannelSpecifics =
-          AndroidNotificationDetails(
-        'bu_buds_channel',
-        'BU BUDS Notifications',
-        channelDescription: 'Notifications from BU BUDS app',
-        importance: Importance.max,
-        priority: Priority.high,
-      );
-      const NotificationDetails platformChannelSpecifics =
-          NotificationDetails(android: androidPlatformChannelSpecifics);
-
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        'Notifications Enabled',
-        'You will now receive important updates from BU BUDS',
-        platformChannelSpecifics,
-      );
-    }
+  Future<void> _handleNotificationPermission(BuildContext context) async {
+    final granted = await NotificationsService.requestPermission();
 
     // Navigate to completion screen regardless of permission status
     // ignore: use_build_context_synchronously
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => const CompletionProcessScreen(),
+        builder: (context) => CompletionProcessScreen(
+          userName: userName,
+          selectedTopics: selectedTopics,
+        ),
       ),
     );
   }
@@ -77,37 +36,33 @@ class NotificationPromptScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Spacer(),
             const Text(
-              'Give me notifications',
+              'Stay Connected',
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             const Text(
-              'Stay updated with important announcements and events',
+              'Enable notifications to stay updated with important announcements and events',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 32),
             Image.asset(
               'assets/notification.png',
-              height: 250,
-              width: 250,
+              height: 200,
+              fit: BoxFit.contain,
             ),
             const Spacer(),
             SizedBox(
@@ -115,41 +70,41 @@ class NotificationPromptScreen extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                onPressed: () => _requestNotificationPermission(context),
+                onPressed: () => _handleNotificationPermission(context),
                 child: const Text(
                   'Turn On Notifications',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CompletionProcessScreen(
+                    userName: userName,
+                    selectedTopics: selectedTopics,
+                  ),
+                ),
+              ),
+              child: const Text(
+                'Maybe Later',
+                style: TextStyle(color: Colors.grey),
               ),
             ),
             const SizedBox(height: 16),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CompletionProcessScreen(),
-                  ),
-                );
-              },
-              child: const Text(
-                'Remind me later',
-                style: TextStyle(fontSize: 16, color: Colors.red),
-              ),
-            ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
-}
-
-extension on AndroidFlutterLocalNotificationsPlugin? {
-  requestPermission() {}
 }
