@@ -52,6 +52,27 @@ class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
       'color': Colors.purple[100],
       'selected': false,
     },
+    {
+      'title': 'Geography',
+      'subtitle': 'Maps, Climate, Landforms',
+      'icon': Icons.public,
+      'color': Colors.purple[100],
+      'selected': false,
+    },
+    {
+      'title': 'Geography',
+      'subtitle': 'Maps, Climate, Landforms',
+      'icon': Icons.public,
+      'color': Colors.purple[100],
+      'selected': false,
+    },
+    {
+      'title': 'Geography',
+      'subtitle': 'Maps, Climate, Landforms',
+      'icon': Icons.public,
+      'color': Colors.purple[100],
+      'selected': false,
+    },
   ];
 
   int get selectedCount => topics.where((topic) => topic['selected']).length;

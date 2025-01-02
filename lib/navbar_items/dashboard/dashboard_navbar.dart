@@ -1,11 +1,16 @@
-import 'package:bubuds/screens/classcreen/class_screen.dart';
-import 'package:bubuds/screens/course/course_screen.dart';
-import 'package:bubuds/screens/presence/presence_screen.dart';
-import 'package:bubuds/screens/subject_screen/subject_screen.dart';
 import 'package:flutter/material.dart';
+import '../../screens/classcreen/class_screen.dart';
+import '../../screens/course/course_screen.dart';
+import '../../screens/presence/presence_screen.dart';
+import '../../screens/subject_screen/subject_screen.dart';
 
 class DashboardNavbarView extends StatelessWidget {
-  const DashboardNavbarView({super.key});
+  final List<bool> selectedTopics;
+
+  const DashboardNavbarView({
+    super.key,
+    required this.selectedTopics,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +88,9 @@ class DashboardNavbarView extends StatelessWidget {
                     () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SubjecScreenView(),
+                        builder: (context) => SubjecScreenView(
+                          selectedTopics: selectedTopics,
+                        ),
                       ),
                     ),
                   ),

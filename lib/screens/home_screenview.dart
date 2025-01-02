@@ -1,9 +1,9 @@
-import 'package:bubuds/navbar_items/person/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../navbar_items/dashboard/dashboard_navbar.dart';
 import '../navbar_items/menu/menu_navbar.dart';
 import '../navbar_items/schedule/schedule_navbar.dart';
+import '../navbar_items/person/person_navbar.dart';
 
 class MyHomeScreenView extends StatefulWidget {
   final String userName;
@@ -27,10 +27,10 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
   void initState() {
     super.initState();
     _pages = [
-      const DashboardNavbarView(),
+      DashboardNavbarView(selectedTopics: widget.selectedTopics),
       const ScheduleNavbarView(),
       const MenuNavigationView(),
-      ProfileScreen(userName: widget.userName),
+      PersonScreenView(userName: widget.userName),
     ];
   }
 

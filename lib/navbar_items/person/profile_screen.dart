@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import '../../utils/colors.dart';
 import '../../utils/typography.dart';
 import '../../widgets/common/app_bar.dart';
-import '../../widgets/dialogs/logout_dialog.dart';
-import '../../screens/signup_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final String userName;
 
   const ProfileScreen({
@@ -13,19 +12,26 @@ class ProfileScreen extends StatelessWidget {
     required this.userName,
   });
 
-  Future<void> _showLogoutDialog(BuildContext context) async {
-    final bool? shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (context) => const LogoutDialog(),
-    );
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
 
-    if (shouldLogout == true && context.mounted) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const SignUpDetails()),
-        (route) => false,
-      );
-    }
+class _ProfileScreenState extends State<ProfileScreen> {
+  String? email;
+  String? phone;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      email = prefs.getString('userEmail') ?? '';
+      phone = prefs.getString('userPhone') ?? '';
+    });
   }
 
   @override
@@ -33,99 +39,56 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(title: 'Profile'),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            _buildProfileHeader(),
-            const Divider(height: 1),
-            _buildProfileMenu(context),
+            const CircleAvatar(
+              radius: 50,
+              backgroundImage: AssetImage('assets/addphoto.png'),
+            ),
+            const SizedBox(height: 24),
+            _buildProfileField('Name', widget.userName),
+            _buildProfileField('Email', email ?? ''),
+            _buildProfileField('Phone', phone ?? ''),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileField(String label, String value) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
-      color: Colors.white,
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 30,
-            backgroundImage: AssetImage('assets/addphoto.png'),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userName,
-                  style: AppTypography.h3,
-                ),
-                Text(
-                  'Student',
-                  style: AppTypography.bodyMedium.copyWith(color: Colors.grey),
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.arrow_forward_ios, size: 20),
-            onPressed: () {},
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 6,
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildProfileMenu(BuildContext context) {
-    return Column(
-      children: [
-        _buildMenuItem(
-          icon: Icons.person_outline,
-          title: 'Personal Information',
-          onTap: () {},
-        ),
-        _buildMenuItem(
-          icon: Icons.notifications_outlined,
-          title: 'Notifications',
-          onTap: () {},
-        ),
-        _buildMenuItem(
-          icon: Icons.security_outlined,
-          title: 'Security',
-          onTap: () {},
-        ),
-        _buildMenuItem(
-          icon: Icons.help_outline,
-          title: 'Help Center',
-          onTap: () {},
-        ),
-        _buildMenuItem(
-          icon: Icons.logout,
-          title: 'Logout',
-          textColor: AppColors.error,
-          onTap: () => _showLogoutDialog(context),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    Color? textColor,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: textColor ?? Colors.black),
-      title: Text(
-        title,
-        style: AppTypography.bodyLarge.copyWith(color: textColor),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: AppTypography.bodyMedium.copyWith(
+              color: AppColors.grey,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: AppTypography.bodyLarge.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 20),
-      onTap: onTap,
     );
   }
 }
