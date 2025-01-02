@@ -1,7 +1,6 @@
 import 'package:bubuds/widgets/dialogs.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
+import '../utils/validators.dart';
 import 'onboarding_screen/choosing_subject.dart';
 
 class SignUpDetails extends StatefulWidget {
@@ -29,7 +28,6 @@ class _SignUpDetailsState extends State<SignUpDetails> {
           MaterialPageRoute(
             builder: (context) => ChoosingSubjectView(
               userName: _nameController.text,
-              selectedTopics: List.generate(5, (index) => false),
             ),
           ),
         );
@@ -40,6 +38,76 @@ class _SignUpDetailsState extends State<SignUpDetails> {
         );
       }
     }
+  }
+
+  Widget _buildTextField({
+    required String label,
+    required TextEditingController controller,
+    required String? Function(String?) validator,
+    bool isPassword = false,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: controller,
+        obscureText: isPassword && _obscurePassword,
+        keyboardType: keyboardType,
+        validator: validator,
+        decoration: InputDecoration(
+          labelText: label,
+          suffixIcon: isPassword
+              ? IconButton(
+                  icon: Icon(
+                    _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                )
+              : null,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return _buildTextField(
+      label: "Password",
+      controller: _passwordController,
+      validator: Validators.validatePassword,
+      isPassword: true,
+    );
+  }
+
+  Widget _buildPhoneField() {
+    return _buildTextField(
+      label: "Phone Number",
+      controller: _phoneController,
+      validator: Validators.validatePhone,
+      keyboardType: TextInputType.phone,
+    );
+  }
+
+  Widget _buildTermsCheckbox() {
+    return CheckboxListTile(
+      title: const Text("I accept the terms and conditions"),
+      value: _termsAccepted,
+      onChanged: (bool? value) {
+        setState(() {
+          _termsAccepted = value ?? false;
+        });
+      },
+    );
+  }
+
+  Widget _buildSignUpButton() {
+    return ElevatedButton(
+      onPressed: _navigateToChoosingSubject,
+      child: const Text("Sign Up"),
+    );
   }
 
   @override
@@ -75,6 +143,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                   label: "Email",
                   controller: _emailController,
                   validator: Validators.validateEmail,
+                  keyboardType: TextInputType.emailAddress,
                 ),
                 _buildPasswordField(),
                 _buildPhoneField(),
@@ -87,6 +156,4 @@ class _SignUpDetailsState extends State<SignUpDetails> {
       ),
     );
   }
-
-  // ... Rest of the widget building methods
 }

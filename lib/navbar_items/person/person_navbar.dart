@@ -5,13 +5,18 @@ import 'package:bubuds/utils/typography.dart';
 import 'package:flutter/material.dart';
 
 class PersonScreenView extends StatelessWidget {
-  PersonScreenView({super.key});
+  final String userName;
+
+  PersonScreenView({
+    super.key,
+    required this.userName,
+  });
 
   final List<Map<String, dynamic>> menuItems = [
     {
       'title': 'Profile',
       'icon': Icons.person_outline,
-      'route': const ProfileScreen(),
+      'route': null, // Will be set in build
     },
     {
       'title': 'Account',
@@ -32,6 +37,9 @@ class PersonScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Update Profile route with userName
+    menuItems[0]['route'] = ProfileScreen(userName: userName);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -47,7 +55,6 @@ class PersonScreenView extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // Profile Section
             Container(
               padding: const EdgeInsets.all(16),
               color: AppColors.white,
@@ -69,20 +76,18 @@ class PersonScreenView extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "Marvin McKinney",
+                          userName,
                           style: AppTypography.h3,
                         ),
                       ],
                     ),
                   ),
-                  Icon(Icons.arrow_forward_ios,
+                  const Icon(Icons.arrow_forward_ios,
                       color: AppColors.grey, size: 20),
                 ],
               ),
             ),
             const Divider(height: 1),
-
-            // Menu Items
             Expanded(
               child: ListView.separated(
                 itemCount: menuItems.length,
@@ -119,8 +124,6 @@ class PersonScreenView extends StatelessWidget {
                 },
               ),
             ),
-
-            // Help Section
             Padding(
               padding: const EdgeInsets.all(16),
               child: Container(
@@ -144,8 +147,6 @@ class PersonScreenView extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Footer
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(

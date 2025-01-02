@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-
 import '../home_screenview.dart';
 
 class CompletionProcessScreen extends StatefulWidget {
-  const CompletionProcessScreen({super.key});
+  final String userName;
+  final List<bool> selectedTopics;
+
+  const CompletionProcessScreen({
+    super.key,
+    required this.userName,
+    required this.selectedTopics,
+  });
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CompletionProcessScreenState createState() =>
+  State<CompletionProcessScreen> createState() =>
       _CompletionProcessScreenState();
 }
 
@@ -15,16 +20,19 @@ class _CompletionProcessScreenState extends State<CompletionProcessScreen> {
   @override
   void initState() {
     super.initState();
-    // Navigate to HomeScreen after 2 seconds
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushAndRemoveUntil(
-        // ignore: use_build_context_synchronously
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MyHomeScreenView(),
-        ),
-        (Route<dynamic> route) => false, // Removes all previous routes
-      );
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MyHomeScreenView(
+              userName: widget.userName,
+              selectedTopics: widget.selectedTopics,
+            ),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      }
     });
   }
 
@@ -37,7 +45,7 @@ class _CompletionProcessScreenState extends State<CompletionProcessScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/complition.png', // Replace with actual image path
+              'assets/complition.png',
               height: 200,
               width: 200,
             ),

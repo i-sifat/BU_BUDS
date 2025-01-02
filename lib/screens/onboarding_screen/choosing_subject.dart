@@ -56,6 +56,10 @@ class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
 
   int get selectedCount => topics.where((topic) => topic['selected']).length;
 
+  List<bool> getSelectedTopicsAsBoolList() {
+    return topics.map((topic) => topic['selected'] as bool).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,10 +180,7 @@ class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
                           MaterialPageRoute(
                             builder: (context) => NotificationPromptScreen(
                               userName: widget.userName,
-                              selectedTopics: topics
-                                  .where((topic) => topic['selected'])
-                                  .map((topic) => topic['title'] as String)
-                                  .toList(),
+                              selectedTopics: getSelectedTopicsAsBoolList(),
                             ),
                           ),
                         );
