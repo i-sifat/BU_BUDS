@@ -6,10 +6,12 @@ import '../../screens/subject_screen/subject_screen.dart';
 
 class DashboardNavbarView extends StatelessWidget {
   final List<bool> selectedTopics;
+  final String userName;
 
   const DashboardNavbarView({
     super.key,
     required this.selectedTopics,
+    required this.userName,
   });
 
   @override
@@ -28,9 +30,9 @@ class DashboardNavbarView extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Hi, Jenny Wilson',
-                        style: TextStyle(
+                      Text(
+                        'Hi, $userName',
+                        style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                         ),

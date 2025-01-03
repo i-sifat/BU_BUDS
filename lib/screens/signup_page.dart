@@ -1,5 +1,6 @@
 import 'package:bubuds/widgets/dialogs.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/validators.dart';
 import 'onboarding_screen/choosing_subject.dart';
 
@@ -20,17 +21,28 @@ class _SignUpDetailsState extends State<SignUpDetails> {
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
 
-  void _navigateToChoosingSubject() {
+  Future<void> _saveUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userName', _nameController.text);
+    await prefs.setString('userEmail', _emailController.text);
+    await prefs.setString('userPhone', _phoneController.text);
+    await prefs.setString('userPassword', _passwordController.text);
+  }
+
+  void _navigateToChoosingSubject() async {
     if (_formKey.currentState!.validate()) {
       if (_termsAccepted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ChoosingSubjectView(
-              userName: _nameController.text,
+        await _saveUserData();
+        if (mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChoosingSubjectView(
+                userName: _nameController.text,
+              ),
             ),
-          ),
-        );
+          );
+        }
       } else {
         DialogUtils.showErrorDialog(
           context,

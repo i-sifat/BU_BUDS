@@ -108,7 +108,7 @@ class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Choose your topic interest',
+              'Choose your Courses',
               style: AppTypography.h2,
             ),
             const SizedBox(height: 8),

@@ -27,7 +27,10 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
   void initState() {
     super.initState();
     _pages = [
-      DashboardNavbarView(selectedTopics: widget.selectedTopics),
+      DashboardNavbarView(
+        selectedTopics: widget.selectedTopics,
+        userName: widget.userName,
+      ),
       const ScheduleNavbarView(),
       const MenuNavigationView(),
       PersonScreenView(userName: widget.userName),

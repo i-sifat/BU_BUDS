@@ -2,7 +2,10 @@ import 'package:bubuds/navbar_items/person/about_screen.dart';
 import 'package:bubuds/navbar_items/person/profile_screen.dart';
 import 'package:bubuds/utils/colors.dart';
 import 'package:bubuds/utils/typography.dart';
+import 'package:bubuds/widgets/dialogs/logout_dialog.dart';
+import 'package:bubuds/screens/signup_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PersonScreenView extends StatelessWidget {
   final String userName;
@@ -33,7 +36,33 @@ class PersonScreenView extends StatelessWidget {
       'icon': Icons.info_outline,
       'route': const AboutScreen(),
     },
+    {
+      'title': 'Logout',
+      'icon': Icons.logout,
+      'textColor': AppColors.error,
+      'route': null,
+      'isLogout': true,
+    },
   ];
+
+  Future<void> _handleLogout(BuildContext context) async {
+    final bool? shouldLogout = await showDialog<bool>(
+      context: context,
+      builder: (context) => const LogoutDialog(),
+    );
+
+    if (shouldLogout == true && context.mounted) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear(); // Clear all stored data
+
+      // Navigate to signup page and remove all previous routes
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const SignUpDetails()),
+        (route) => false,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,18 +129,22 @@ class PersonScreenView extends StatelessWidget {
                       backgroundColor:
                           AppColors.secondaryLight.withOpacity(0.2),
                       child: Icon(item['icon'],
-                          color: AppColors.secondary, size: 24),
+                          color: item['textColor'] ?? AppColors.secondary,
+                          size: 24),
                     ),
                     title: Text(
                       item['title'],
                       style: AppTypography.bodyLarge.copyWith(
                         fontWeight: FontWeight.w500,
+                        color: item['textColor'],
                       ),
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios,
                         color: AppColors.grey, size: 18),
                     onTap: () {
-                      if (item['route'] != null) {
+                      if (item['isLogout'] == true) {
+                        _handleLogout(context);
+                      } else if (item['route'] != null) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -124,62 +157,6 @@ class PersonScreenView extends StatelessWidget {
                 },
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  children: [
-                    const Icon(Icons.headset_mic,
-                        color: AppColors.white, size: 30),
-                    const SizedBox(width: 16),
-                    Text(
-                      "How can we help you?",
-                      style: AppTypography.bodyLarge.copyWith(
-                        color: AppColors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Privacy Policy",
-                    style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.greyDark,
-                    ),
-                  ),
-                  Text(
-                    "Terms",
-                    style: AppTypography.bodySmall.copyWith(
-                      color: AppColors.greyDark,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "English",
-                        style: AppTypography.bodySmall.copyWith(
-                          color: AppColors.greyDark,
-                        ),
-                      ),
-                      const Icon(Icons.keyboard_arrow_down,
-                          color: AppColors.grey, size: 20),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 8),
           ],
         ),
       ),
