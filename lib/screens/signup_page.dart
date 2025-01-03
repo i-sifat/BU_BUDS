@@ -1,8 +1,8 @@
+import 'package:bubuds/screens/department_selection_screen.dart';
 import 'package:bubuds/widgets/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/validators.dart';
-import 'onboarding_screen/choosing_subject.dart';
 
 class SignUpDetails extends StatefulWidget {
   const SignUpDetails({super.key});
@@ -37,7 +37,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ChoosingSubjectView(
+              builder: (context) => DepartmentSelectionScreen(
                 userName: _nameController.text,
               ),
             ),
