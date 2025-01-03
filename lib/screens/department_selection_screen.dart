@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/departments_data.dart';
-import '../models/department.dart';
-import '../services/preferences_service.dart';
+import '../utils/colors.dart';
+import '../utils/typography.dart';
 import 'onboarding_screen/choosing_subject.dart';
 
 class DepartmentSelectionScreen extends StatefulWidget {
@@ -27,50 +27,141 @@ class _DepartmentSelectionScreenState extends State<DepartmentSelectionScreen> {
     });
   }
 
-  void _continue() async {
+  void _continue() {
     if (selectedDepartment != null) {
-      await PreferencesService.saveSelectedDepartment(selectedDepartment!);
+      final department = departments.firstWhere(
+        (dept) => dept.name == selectedDepartment,
+      );
 
-      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ChoosingSubjectView(
             userName: widget.userName,
             departmentName: selectedDepartment!,
+            courses: department.courses,
           ),
         ),
       );
     }
   }
 
+  void _skip() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChoosingSubjectView(
+          userName: widget.userName,
+          departmentName: departments.first.name,
+          courses: departments.first.courses,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Choose Your Department'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          TextButton(
+            onPressed: _skip,
+            child: Text(
+              'Skip',
+              style: AppTypography.bodyMedium.copyWith(color: Colors.black),
+            ),
+          ),
+        ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Choose your Department',
+                  style: AppTypography.h2,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Select the department you want to study in',
+                  style: AppTypography.bodyMedium.copyWith(color: Colors.grey),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: departments.length,
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               itemBuilder: (context, index) {
                 final department = departments[index];
-                return RadioListTile<String>(
-                  title: Text(department.name),
-                  value: department.name,
-                  groupValue: selectedDepartment,
-                  onChanged: (value) => _selectDepartment(value!),
+                final isSelected = department.name == selectedDepartment;
+
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: isSelected ? AppColors.primary : Colors.grey[200]!,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: department.iconColor,
+                      child: Icon(department.icon, color: Colors.black87),
+                    ),
+                    title: Text(
+                      department.name,
+                      style: AppTypography.bodyLarge.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    subtitle: Text(
+                      department.subtitle,
+                      style: AppTypography.bodySmall.copyWith(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    trailing: isSelected
+                        ? const Icon(Icons.check_circle,
+                            color: AppColors.primary)
+                        : const Icon(Icons.circle_outlined, color: Colors.grey),
+                    onTap: () => _selectDepartment(department.name),
+                  ),
                 );
               },
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: selectedDepartment != null ? _continue : null,
-              child: const Text('Continue'),
+            padding: const EdgeInsets.all(24.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: selectedDepartment != null ? _continue : null,
+                child: Text(
+                  'Continue',
+                  style: AppTypography.buttonLarge,
+                ),
+              ),
             ),
           ),
         ],

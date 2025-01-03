@@ -1,238 +1,19 @@
-// import 'package:flutter/material.dart';
-// import '../../utils/colors.dart';
-// import '../../utils/typography.dart';
-// import 'request_notification.dart';
-
-// class ChoosingSubjectView extends StatefulWidget {
-//   final String userName;
-
-//   const ChoosingSubjectView({
-//     super.key,
-//     required this.userName,
-//   });
-
-//   @override
-//   State<ChoosingSubjectView> createState() => _ChoosingSubjectViewState();
-// }
-
-// class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
-//   final List<Map<String, dynamic>> topics = [
-//     {
-//       'title': 'Mathematics',
-//       'subtitle': 'Geometry, Algorithm',
-//       'icon': Icons.functions,
-//       'color': Colors.red[100],
-//       'selected': false,
-//     },
-//     {
-//       'title': 'Economy',
-//       'subtitle': 'Stock, Property, News',
-//       'icon': Icons.show_chart,
-//       'color': Colors.orange[100],
-//       'selected': false,
-//     },
-//     {
-//       'title': 'English',
-//       'subtitle': 'Grammar, Literature, Writing',
-//       'icon': Icons.book,
-//       'color': Colors.blue[100],
-//       'selected': false,
-//     },
-//     {
-//       'title': 'Biology',
-//       'subtitle': 'Anatomy, Genetics, Ecology',
-//       'icon': Icons.biotech,
-//       'color': Colors.green[100],
-//       'selected': false,
-//     },
-//     {
-//       'title': 'Geography',
-//       'subtitle': 'Maps, Climate, Landforms',
-//       'icon': Icons.public,
-//       'color': Colors.purple[100],
-//       'selected': false,
-//     },
-//     {
-//       'title': 'Geography',
-//       'subtitle': 'Maps, Climate, Landforms',
-//       'icon': Icons.public,
-//       'color': Colors.purple[100],
-//       'selected': false,
-//     },
-//     {
-//       'title': 'Geography',
-//       'subtitle': 'Maps, Climate, Landforms',
-//       'icon': Icons.public,
-//       'color': Colors.purple[100],
-//       'selected': false,
-//     },
-//     {
-//       'title': 'Geography',
-//       'subtitle': 'Maps, Climate, Landforms',
-//       'icon': Icons.public,
-//       'color': Colors.purple[100],
-//       'selected': false,
-//     },
-//   ];
-
-//   int get selectedCount => topics.where((topic) => topic['selected']).length;
-
-//   List<bool> getSelectedTopicsAsBoolList() {
-//     return topics.map((topic) => topic['selected'] as bool).toList();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       appBar: AppBar(
-//         backgroundColor: Colors.white,
-//         elevation: 0,
-//         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-//           onPressed: () => Navigator.pop(context),
-//         ),
-//         actions: [
-//           TextButton(
-//             onPressed: () {},
-//             child: Text(
-//               'Skip',
-//               style: AppTypography.bodyMedium.copyWith(color: Colors.black),
-//             ),
-//           ),
-//         ],
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(24.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               'Choose your Courses',
-//               style: AppTypography.h2,
-//             ),
-//             const SizedBox(height: 8),
-//             Text(
-//               'Select at least 3 topics you are interested in',
-//               style: AppTypography.bodyMedium.copyWith(color: Colors.grey),
-//             ),
-//             const SizedBox(height: 32),
-//             Expanded(
-//               child: ListView.separated(
-//                 itemCount: topics.length,
-//                 separatorBuilder: (context, index) =>
-//                     const SizedBox(height: 16),
-//                 itemBuilder: (context, index) {
-//                   final topic = topics[index];
-//                   return InkWell(
-//                     onTap: () {
-//                       setState(() {
-//                         topic['selected'] = !topic['selected'];
-//                       });
-//                     },
-//                     child: Container(
-//                       padding: const EdgeInsets.all(16),
-//                       decoration: BoxDecoration(
-//                         color: Colors.white,
-//                         borderRadius: BorderRadius.circular(12),
-//                         border: Border.all(
-//                           color: topic['selected']
-//                               ? AppColors.primary
-//                               : Colors.grey[200]!,
-//                         ),
-//                       ),
-//                       child: Row(
-//                         children: [
-//                           Container(
-//                             padding: const EdgeInsets.all(12),
-//                             decoration: BoxDecoration(
-//                               color: topic['color'],
-//                               shape: BoxShape.circle,
-//                             ),
-//                             child: Icon(topic['icon'], color: Colors.black),
-//                           ),
-//                           const SizedBox(width: 16),
-//                           Expanded(
-//                             child: Column(
-//                               crossAxisAlignment: CrossAxisAlignment.start,
-//                               children: [
-//                                 Text(
-//                                   topic['title'],
-//                                   style: AppTypography.bodyLarge.copyWith(
-//                                     fontWeight: FontWeight.w500,
-//                                   ),
-//                                 ),
-//                                 Text(
-//                                   topic['subtitle'],
-//                                   style: AppTypography.bodySmall.copyWith(
-//                                     color: Colors.grey,
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-//                           if (topic['selected'])
-//                             const Icon(
-//                               Icons.check_circle,
-//                               color: AppColors.primary,
-//                             ),
-//                         ],
-//                       ),
-//                     ),
-//                   );
-//                 },
-//               ),
-//             ),
-//             const SizedBox(height: 24),
-//             SizedBox(
-//               width: double.infinity,
-//               child: ElevatedButton(
-//                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: AppColors.primary,
-//                   padding: const EdgeInsets.symmetric(vertical: 16),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(8),
-//                   ),
-//                 ),
-//                 onPressed: selectedCount >= 3
-//                     ? () {
-//                         Navigator.push(
-//                           context,
-//                           MaterialPageRoute(
-//                             builder: (context) => NotificationPromptScreen(
-//                               userName: widget.userName,
-//                               selectedTopics: getSelectedTopicsAsBoolList(),
-//                             ),
-//                           ),
-//                         );
-//                       }
-//                     : null,
-//                 child: Text(
-//                   'Continue (${selectedCount}/3)',
-//                   style: AppTypography.buttonLarge,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
-import '../../data/departments_data.dart';
 import '../../models/department.dart';
-import '../../services/preferences_service.dart';
+import '../../utils/colors.dart';
+import '../../utils/typography.dart';
 import 'request_notification.dart';
 
 class ChoosingSubjectView extends StatefulWidget {
   final String userName;
   final String departmentName;
+  final List<Course> courses;
 
   const ChoosingSubjectView({
     super.key,
     required this.userName,
     required this.departmentName,
+    required this.courses,
   });
 
   @override
@@ -240,47 +21,36 @@ class ChoosingSubjectView extends StatefulWidget {
 }
 
 class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
-  late List<Course> departmentCourses;
   int selectedCount = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadCourses();
-  }
-
-  void _loadCourses() {
-    final departments = DepartmentsData.getDepartments();
-    final department = departments.firstWhere(
-      (d) => d.name == widget.departmentName,
-    );
-    departmentCourses = department.courses;
-    setState(() {});
-  }
-
-  void _toggleCourse(int index) {
-    if (!departmentCourses[index].isSelected && selectedCount >= 3) return;
+  void _toggleCourse(Course course) {
+    if (!course.isSelected && selectedCount >= 6) return;
 
     setState(() {
-      departmentCourses[index].isSelected =
-          !departmentCourses[index].isSelected;
-      selectedCount =
-          departmentCourses.where((course) => course.isSelected).length;
+      course.isSelected = !course.isSelected;
+      selectedCount = widget.courses.where((c) => c.isSelected).length;
     });
   }
 
-  void _continue() async {
-    final selectedCourses =
-        departmentCourses.where((course) => course.isSelected).toList();
-    await PreferencesService.saveSelectedCourses(selectedCourses);
-
-    if (!mounted) return;
+  void _continue() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => NotificationPromptScreen(
           userName: widget.userName,
-          selectedTopics: selectedCourses.map((e) => e.isSelected).toList(),
+          selectedTopics: widget.courses.map((c) => c.isSelected).toList(),
+        ),
+      ),
+    );
+  }
+
+  void _skip() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => NotificationPromptScreen(
+          userName: widget.userName,
+          selectedTopics: List.generate(widget.courses.length, (_) => false),
         ),
       ),
     );
@@ -289,40 +59,121 @@ class _ChoosingSubjectViewState extends State<ChoosingSubjectView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Choose Your Courses'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          TextButton(
+            onPressed: _skip,
+            child: Text(
+              'Skip',
+              style: AppTypography.bodyMedium.copyWith(color: Colors.black),
+            ),
+          ),
+        ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              widget.departmentName,
-              style: Theme.of(context).textTheme.headlineSmall,
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Choose your Course',
+                  style: AppTypography.h2,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Select 3-6 courses from ${widget.departmentName}',
+                  style: AppTypography.bodyMedium.copyWith(color: Colors.grey),
+                ),
+              ],
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: departmentCourses.length,
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              itemCount: widget.courses.length,
+              separatorBuilder: (_, __) => const Divider(height: 1),
               itemBuilder: (context, index) {
-                final course = departmentCourses[index];
-                return CheckboxListTile(
-                  title: Text(course.name),
-                  subtitle: Text(course.level),
-                  value: course.isSelected,
-                  onChanged: (_) => _toggleCourse(index),
+                final course = widget.courses[index];
+                return _CourseItem(
+                  course: course,
+                  onTap: () => _toggleCourse(course),
                 );
               },
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: selectedCount == 3 ? _continue : null,
-              child: Text('Continue ($selectedCount/3)'),
+            padding: const EdgeInsets.all(24.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: selectedCount >= 3 ? _continue : null,
+                child: Text(
+                  'Continue ($selectedCount/3-6)',
+                  style: AppTypography.buttonLarge,
+                ),
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CourseItem extends StatelessWidget {
+  final Course course;
+  final VoidCallback onTap;
+
+  const _CourseItem({
+    required this.course,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: course.isSelected ? AppColors.primary : Colors.grey[200]!,
+          width: 2,
+        ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ListTile(
+        title: Text(
+          course.name,
+          style: AppTypography.bodyLarge.copyWith(
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        subtitle: Text(
+          course.level,
+          style: AppTypography.bodySmall.copyWith(
+            color: Colors.grey,
+          ),
+        ),
+        trailing: course.isSelected
+            ? const Icon(Icons.check_circle, color: AppColors.primary)
+            : const Icon(Icons.circle_outlined, color: Colors.grey),
+        onTap: onTap,
       ),
     );
   }
