@@ -34,7 +34,7 @@ class Validators {
     if (value == null || value.isEmpty) {
       return 'Phone number cannot be empty';
     }
-    if (value.length != 10 || !value.startsWith('1875263157')) {
+    if (value.length != 11 || !value.startsWith('01875263157')) {
       return 'Invalid phone number format';
     }
     return null;
