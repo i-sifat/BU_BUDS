@@ -1,166 +1,210 @@
 import 'package:flutter/material.dart';
+import '../../models/attendance.dart';
+import '../../utils/colors.dart';
+import '../../utils/typography.dart';
+import '../../widgets/presence/presence_status_badge.dart';
 
-class PresenceScreenView extends StatelessWidget {
+class PresenceScreenView extends StatefulWidget {
   const PresenceScreenView({super.key});
+
+  @override
+  State<PresenceScreenView> createState() => _PresenceScreenViewState();
+}
+
+class _PresenceScreenViewState extends State<PresenceScreenView> {
+  final List<AttendanceSheet> _attendanceSheets = [
+    AttendanceSheet(
+      subjectName: 'Mathematics',
+      teacherName: 'Dr. Smith',
+      date: DateTime.now(),
+      records: [],
+      totalStudents: 30,
+      presentCount: 28,
+    ),
+    AttendanceSheet(
+      subjectName: 'Physics',
+      teacherName: 'Dr. Johnson',
+      date: DateTime.now(),
+      records: [],
+      totalStudents: 25,
+      presentCount: 22,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Presences'),
+        title: Text(
+          'Attendance',
+          style: AppTypography.h3,
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-            // Back button logic
-          },
+          onPressed: () => Navigator.pop(context),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.calendar_today),
+            onPressed: () => _showDatePicker(context),
+          ),
+        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            PresenceCard(
-              subjectName: 'Mathematics',
-              materials: 15,
-              percentage: 100,
-              attendanceList: [
-                Attendance(date: 'Today', status: 'Present'),
-                Attendance(date: '15 Dec 2021', status: 'Present'),
-                Attendance(date: '12 Dec 2021', status: 'Present'),
-              ],
+      body: Column(
+        children: [
+          _buildAttendanceOverview(),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: _attendanceSheets.length,
+              itemBuilder: (context, index) {
+                return _buildAttendanceCard(_attendanceSheets[index]);
+              },
             ),
-            const SizedBox(height: 20),
-            const PresenceCard(
-              subjectName: 'Biology',
-              materials: 15,
-              percentage: 85,
-              attendanceList: [],
-            ),
-            const SizedBox(height: 20),
-            const PresenceCard(
-              subjectName: 'English',
-              materials: 15,
-              percentage: 45,
-              attendanceList: [],
-            ),
-          ],
-        ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showTakeAttendanceDialog(context),
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
-}
 
-class PresenceCard extends StatefulWidget {
-  final String subjectName;
-  final int materials;
-  final int percentage;
-  final List<Attendance> attendanceList;
-
-  const PresenceCard({
-    super.key,
-    required this.subjectName,
-    required this.materials,
-    required this.percentage,
-    required this.attendanceList,
-  });
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _PresenceCardState createState() => _PresenceCardState();
-}
-
-class _PresenceCardState extends State<PresenceCard> {
-  bool _isExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+  Widget _buildAttendanceOverview() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      color: AppColors.primary.withOpacity(0.1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildOverviewItem('Total Classes', '15'),
+          _buildOverviewItem('Present', '13'),
+          _buildOverviewItem('Attendance', '86.7%'),
+        ],
       ),
-      elevation: 5,
+    );
+  }
+
+  Widget _buildOverviewItem(String label, String value) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: AppTypography.h2.copyWith(color: AppColors.primary),
+        ),
+        Text(
+          label,
+          style: AppTypography.bodySmall,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAttendanceCard(AttendanceSheet sheet) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.subjectName,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 4),
-                    Text('${widget.materials} materials'),
-                  ],
+                Text(
+                  sheet.subjectName,
+                  style: AppTypography.bodyLarge.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: widget.percentage == 100
-                        ? Colors.green
-                        : widget.percentage > 50
-                            ? Colors.orange
-                            : Colors.red,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    '${widget.percentage}%',
-                    style: const TextStyle(color: Colors.white),
-                  ),
+                PresenceStatusBadge(
+                  percentage: sheet.attendancePercentage.round(),
                 ),
               ],
             ),
-            if (_isExpanded && widget.attendanceList.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              const Divider(),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: widget.attendanceList.length,
-                itemBuilder: (context, index) {
-                  final attendance = widget.attendanceList[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(attendance.date),
-                        Text(attendance.status),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ],
-            IconButton(
-              icon: Icon(
-                _isExpanded
-                    ? Icons.keyboard_arrow_up
-                    : Icons.keyboard_arrow_down,
-              ),
-              onPressed: () {
-                setState(() {
-                  _isExpanded = !_isExpanded;
-                });
-              },
+            const SizedBox(height: 8),
+            Text(
+              'Teacher: ${sheet.teacherName}',
+              style: AppTypography.bodyMedium,
+            ),
+            Text(
+              'Date: ${_formatDate(sheet.date)}',
+              style: AppTypography.bodySmall,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Present: ${sheet.presentCount}/${sheet.totalStudents}',
+              style: AppTypography.bodyMedium,
             ),
           ],
         ),
       ),
     );
   }
-}
 
-class Attendance {
-  final String date;
-  final String status;
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
 
-  Attendance({required this.date, required this.status});
+  Future<void> _showDatePicker(BuildContext context) async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2024),
+      lastDate: DateTime.now(),
+    );
+    if (date != null) {
+      // Handle date selection
+    }
+  }
+
+  Future<void> _showTakeAttendanceDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Take Attendance',
+          style: AppTypography.h3,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'Subject',
+              ),
+              items: const [
+                DropdownMenuItem(
+                    value: 'Mathematics', child: Text('Mathematics')),
+                DropdownMenuItem(value: 'Physics', child: Text('Physics')),
+              ],
+              onChanged: (value) {},
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Number of Students',
+              ),
+              keyboardType: TextInputType.number, // Moved outside of decoration
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // Implement attendance taking logic
+            },
+            child: const Text('Start'),
+          ),
+        ],
+      ),
+    );
+  }
 }

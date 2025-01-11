@@ -1,57 +1,72 @@
-import 'package:bubuds/utils/colors.dart';
-import 'package:bubuds/utils/typography.dart';
 import 'package:flutter/material.dart';
+import '../../utils/colors.dart';
+import '../../utils/typography.dart';
+import '../../models/attendance.dart';
 
 class AttendanceListItem extends StatelessWidget {
-  final String date;
-  final String status;
+  final AttendanceRecord record;
+  final VoidCallback? onTap;
 
   const AttendanceListItem({
     super.key,
-    required this.date,
-    required this.status,
+    required this.record,
+    this.onTap,
   });
 
-  Color get _statusColor {
-    switch (status.toLowerCase()) {
-      case 'present':
+  Color get statusColor {
+    switch (record.status) {
+      case AttendanceStatus.present:
         return AppColors.success;
-      case 'absent':
+      case AttendanceStatus.absent:
         return AppColors.error;
-      default:
+      case AttendanceStatus.late:
         return AppColors.warning;
+      case AttendanceStatus.excused:
+        return Colors.grey;
+    }
+  }
+
+  String get statusText {
+    switch (record.status) {
+      case AttendanceStatus.present:
+        return 'Present';
+      case AttendanceStatus.absent:
+        return 'Absent';
+      case AttendanceStatus.late:
+        return 'Late';
+      case AttendanceStatus.excused:
+        return 'Excused';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            date,
-            style: AppTypography.bodyMedium,
+    return ListTile(
+      onTap: onTap,
+      title: Text(
+        record.studentName,
+        style: AppTypography.bodyLarge,
+      ),
+      subtitle: Text(
+        'ID: ${record.studentId}',
+        style: AppTypography.bodySmall,
+      ),
+      trailing: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 4,
+        ),
+        decoration: BoxDecoration(
+          color: statusColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          statusText,
+          style: AppTypography.bodySmall.copyWith(
+            color: statusColor,
+            fontWeight: FontWeight.w500,
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 4,
-            ),
-            decoration: BoxDecoration(
-              color: _statusColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              status,
-              style: AppTypography.bodySmall.copyWith(
-                color: _statusColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
