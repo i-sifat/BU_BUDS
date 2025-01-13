@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.1] - 2025-01-13
+## [1.0.2] - 2025-01-13
 
 ### Added
 - App icon for enhanced visual branding.

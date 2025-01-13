@@ -1,4 +1,4 @@
-# Release Notes for BU BUDS v1.0.1
+# Release Notes for BU BUDS v1.0.2
 
 ## New Features
 - App icon added for enhanced visual branding.
