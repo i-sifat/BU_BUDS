@@ -8,11 +8,13 @@ import '../navbar_items/person/person_navbar.dart';
 class MyHomeScreenView extends StatefulWidget {
   final String userName;
   final List<bool> selectedTopics;
+  final bool isGuestUser;
 
   const MyHomeScreenView({
     super.key,
     required this.userName,
     required this.selectedTopics,
+    this.isGuestUser = false,
   });
 
   @override
@@ -22,42 +24,61 @@ class MyHomeScreenView extends StatefulWidget {
 class _MyHomeScreenViewState extends State<MyHomeScreenView> {
   int _selectedIndex = 0;
   late final List<Widget> _pages;
-
-  final List<NavigationDestination> _destinations = const [
-    NavigationDestination(
-      icon: Icon(Icons.dashboard_outlined),
-      selectedIcon: Icon(Icons.dashboard),
-      label: 'Dashboard',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.calendar_today_outlined),
-      selectedIcon: Icon(Icons.calendar_today),
-      label: 'Schedule',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.menu_outlined),
-      selectedIcon: Icon(Icons.menu),
-      label: 'Menu',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.person_outline),
-      selectedIcon: Icon(Icons.person),
-      label: 'Profile',
-    ),
-  ];
+  late final List<NavigationDestination> _destinations;
 
   @override
   void initState() {
     super.initState();
-    _pages = [
-      DashboardNavbarView(
-        selectedTopics: widget.selectedTopics,
-        userName: widget.userName,
-      ),
-      const ScheduleNavbarView(),
-      const MenuNavigationView(),
-      PersonScreenView(userName: widget.userName),
-    ];
+    if (widget.isGuestUser) {
+      _pages = [
+        const MenuNavigationView(),
+        PersonScreenView(userName: widget.userName),
+      ];
+      _destinations = const [
+        NavigationDestination(
+          icon: Icon(Icons.menu_outlined),
+          selectedIcon: Icon(Icons.menu),
+          label: 'Menu',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.person_outline),
+          selectedIcon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+      ];
+    } else {
+      _pages = [
+        DashboardNavbarView(
+          selectedTopics: widget.selectedTopics,
+          userName: widget.userName,
+        ),
+        const ScheduleNavbarView(),
+        const MenuNavigationView(),
+        PersonScreenView(userName: widget.userName),
+      ];
+      _destinations = const [
+        NavigationDestination(
+          icon: Icon(Icons.dashboard_outlined),
+          selectedIcon: Icon(Icons.dashboard),
+          label: 'Dashboard',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.calendar_today_outlined),
+          selectedIcon: Icon(Icons.calendar_today),
+          label: 'Schedule',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.menu_outlined),
+          selectedIcon: Icon(Icons.menu),
+          label: 'Menu',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.person_outline),
+          selectedIcon: Icon(Icons.person),
+          label: 'Profile',
+        ),
+      ];
+    }
   }
 
   void _onItemTapped(int index) {
