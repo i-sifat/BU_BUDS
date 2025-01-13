@@ -258,7 +258,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Version 1.0.1',
+                  'Version 1.0.2',
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 12,
