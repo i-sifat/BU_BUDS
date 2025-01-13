@@ -25,10 +25,10 @@ class CustomBottomNavbar extends StatelessWidget {
       ),
       unselectedLabelStyle: AppTypography.caption,
       items: [
-        _buildNavItem('assets/icons_navbar/fi-sr-apps.png', 'Dashboard'),
-        _buildNavItem('assets/icons_navbar/fi-sr-calendar.png', 'Schedule'),
-        _buildNavItem('assets/icons_navbar/fi-sr-comment.png', 'Menu'),
-        _buildNavItem('assets/icons_navbar/fi-sr-user.png', 'Profile'),
+        _buildNavItem('assets/navbar_icons/dashboard.png', 'Dashboard'),
+        _buildNavItem('assets/navbar_icons/schedule.png', 'Schedule'),
+        _buildNavItem('assets/navbar_icons/menu.png', 'Menu'),
+        _buildNavItem('assets/navbar_icons/profile.png', 'Profile'),
       ],
     );
   }
@@ -39,13 +39,13 @@ class CustomBottomNavbar extends StatelessWidget {
         iconPath,
         width: 24,
         height: 24,
-        color: Colors.grey,
+        // Removing color tint since we're using pre-colored PNG images
       ),
       activeIcon: Image.asset(
         iconPath,
         width: 24,
         height: 24,
-        color: AppColors.primary,
+        // Removing color tint since we're using pre-colored PNG images
       ),
       label: label,
     );

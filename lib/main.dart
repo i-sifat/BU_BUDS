@@ -5,34 +5,60 @@ import 'screens/home_screenview.dart';
 import 'screens/onboarding_screen/initial_page.dart';
 import 'utils/theme.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+Future<void> main() async {
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // Set system UI overlay style
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarBrightness: Brightness.dark,
-    systemNavigationBarColor: Colors.transparent,
-    systemNavigationBarDividerColor: Colors.transparent,
-    systemNavigationBarIconBrightness: Brightness.dark,
-    statusBarIconBrightness: Brightness.dark,
-  ));
+    // Set system UI overlay style
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarDividerColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+    ));
 
-  // Initialize preferences
-  final prefs = await SharedPreferences.getInstance();
-  final isFirstTime = prefs.getBool('isFirstTime') ?? true;
-  final userName = prefs.getString('userName') ?? '';
-  final selectedTopics = List.generate(5, (index) => false);
+    // Initialize preferences
+    final prefs = await SharedPreferences.getInstance();
+    final isFirstTime = prefs.getBool('isFirstTime') ?? true;
+    final userName = prefs.getString('userName') ?? '';
 
-  if (isFirstTime) {
-    await prefs.setBool('isFirstTime', false);
+    // Load selected topics with proper persistence
+    final List<bool> selectedTopics = List<bool>.from(
+        prefs.getStringList('selectedTopics')?.map((e) => e == 'true') ??
+            List.generate(5, (index) => false));
+
+    if (isFirstTime) {
+      await prefs.setBool('isFirstTime', false);
+      // Initialize selectedTopics in storage
+      await prefs.setStringList(
+          'selectedTopics', List.generate(5, (index) => 'false'));
+    }
+
+    // Ensure at least one topic is selected or select the first one by default
+    if (!selectedTopics.contains(true)) {
+      selectedTopics[0] = true;
+      await prefs.setStringList(
+          'selectedTopics', selectedTopics.map((e) => e.toString()).toList());
+    }
+
+    runApp(MyApp(
+      isFirstTime: isFirstTime,
+      userName: userName,
+      selectedTopics: selectedTopics,
+    ));
+  } catch (e, stackTrace) {
+    debugPrint('Error initializing app: $e\n$stackTrace');
+    // Run app in error state
+    runApp(const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Failed to initialize app. Please restart.'),
+        ),
+      ),
+    ));
   }
-
-  runApp(MyApp(
-    isFirstTime: isFirstTime,
-    userName: userName,
-    selectedTopics: selectedTopics,
-  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -45,13 +71,31 @@ class MyApp extends StatelessWidget {
     required this.isFirstTime,
     required this.userName,
     required this.selectedTopics,
-  });
+  }) : assert(selectedTopics.length == 5,
+            'Selected topics must have exactly 5 items');
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      builder: (context, child) {
+        ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                  const SizedBox(height: 16),
+                  Text('An error occurred: ${errorDetails.exception}'),
+                ],
+              ),
+            ),
+          );
+        };
+        return child!;
+      },
       home: isFirstTime
           ? const InitialPageView()
           : MyHomeScreenView(
