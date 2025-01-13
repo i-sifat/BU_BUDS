@@ -23,6 +23,29 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
   int _selectedIndex = 0;
   late final List<Widget> _pages;
 
+  final List<NavigationDestination> _destinations = const [
+    NavigationDestination(
+      icon: Icon(Icons.dashboard_outlined),
+      selectedIcon: Icon(Icons.dashboard),
+      label: 'Dashboard',
+    ),
+    NavigationDestination(
+      icon: Icon(Icons.calendar_today_outlined),
+      selectedIcon: Icon(Icons.calendar_today),
+      label: 'Schedule',
+    ),
+    NavigationDestination(
+      icon: Icon(Icons.menu_outlined),
+      selectedIcon: Icon(Icons.menu),
+      label: 'Menu',
+    ),
+    NavigationDestination(
+      icon: Icon(Icons.person_outline),
+      selectedIcon: Icon(Icons.person),
+      label: 'Profile',
+    ),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -69,36 +92,17 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
       child: Scaffold(
         backgroundColor: const Color(0xFFF3F5F8),
         body: _pages[_selectedIndex],
-        bottomNavigationBar: _buildBottomNavigationBar(),
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: _onItemTapped,
+          destinations: _destinations,
+          elevation: 8,
+          height: 65,
+          backgroundColor: Colors.white,
+          indicatorColor: Colors.teal.withOpacity(0.2),
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        ),
       ),
-    );
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.grid_view_rounded),
-          label: 'Dashboard',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.calendar_today_outlined),
-          label: 'Schedule',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.menu),
-          label: 'Menu',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          label: 'Profile',
-        ),
-      ],
-      selectedItemColor: Colors.teal,
-      unselectedItemColor: Colors.grey,
-      showUnselectedLabels: true,
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../data/departments_data.dart';
-import '../utils/colors.dart';
-import '../utils/typography.dart';
-import 'onboarding_screen/choosing_subject.dart';
+import '../../data/departments_data.dart';
+import '../../utils/colors.dart';
+import '../../utils/typography.dart';
+import 'choosing_subject.dart';
 
 class DepartmentSelectionScreen extends StatefulWidget {
   final String userName;
