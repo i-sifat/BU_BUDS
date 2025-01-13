@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/user_role.dart';
 import '../../utils/validators.dart';
 import '../../widgets/dialogs.dart';
+import '../home_screenview.dart';
 import '../onboarding_screen/department_selection_screen.dart';
 
 class SignUpDetails extends StatefulWidget {
@@ -125,7 +126,11 @@ class _SignUpDetailsState extends State<SignUpDetails> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const MenuNavigationView(),
+                builder: (context) => MyHomeScreenView(
+                  userName: _nameController.text,
+                  selectedTopics: List.generate(5, (index) => false),
+                  isGuestUser: true,
+                ),
               ),
             );
           } else {
