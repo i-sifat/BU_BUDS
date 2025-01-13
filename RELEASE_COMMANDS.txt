@@ -1,0 +1,20 @@
+# Commands to execute for release:
+
+# 1. Stage all changes
+git add .
+
+# 2. Commit the changes
+git commit -F COMMIT_MESSAGE.txt
+
+# 3. Create and push a new tag
+git tag -a v1.0.1 -m "Release version 1.0.1"
+git push origin v1.0.1
+
+# 4. Push all changes to main branch
+git push origin main
+
+# The GitHub Actions workflow will automatically:
+# - Build the app for Android and iOS
+# - Create a new release
+# - Upload the built artifacts
+# - Attach the release notes
