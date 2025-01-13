@@ -2,10 +2,10 @@ import 'package:bubuds/navbar_items/menu/menu_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/user_role.dart';
-import '../utils/validators.dart';
-import '../widgets/dialogs.dart';
-import 'department_selection_screen.dart';
+import '../../models/user_role.dart';
+import '../../utils/validators.dart';
+import '../../widgets/dialogs.dart';
+import '../department_selection_screen.dart';
 
 class SignUpDetails extends StatefulWidget {
   const SignUpDetails({super.key});

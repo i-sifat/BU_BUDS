@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bubuds/screens/signup_page.dart';
+import 'package:bubuds/screens/auth/signup_page.dart';
 import 'package:bubuds/screens/auth/forgot_password_page.dart';
 import 'package:bubuds/screens/department_selection_screen.dart';
 import 'package:bubuds/models/user_role.dart';
