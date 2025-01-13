@@ -1,8 +1,8 @@
+import 'package:bubuds/screens/auth/signin_page.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/onboarding/onboarding_page.dart';
 import '../../widgets/onboarding/page_indicator.dart';
 import '../../widgets/onboarding/navigation_button.dart';
-import '../signup_page.dart';
 import '../../utils/constants.dart';
 
 class OnboardingPageView extends StatefulWidget {
@@ -71,8 +71,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
               } else {
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const SignUpDetails()),
+                  MaterialPageRoute(builder: (context) => const SignInPage()),
                 );
               }
             },

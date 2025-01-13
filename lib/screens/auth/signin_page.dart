@@ -211,7 +211,7 @@ class _SignInPageState extends State<SignInPage> {
                 children: [
                   _buildSocialButton('assets/google.png'),
                   const SizedBox(width: 24),
-                  _buildSocialButton('assets/facebook.png'),
+                  _buildSocialButton('assets/Facebook.png'),
                   const SizedBox(width: 24),
                   _buildSocialButton('assets/apple.png'),
                 ],
