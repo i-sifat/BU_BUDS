@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class AttendanceRecord {
   final String studentId;
   final String studentName;

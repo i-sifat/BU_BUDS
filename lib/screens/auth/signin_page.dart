@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bubuds/screens/signup_page.dart';
 import 'package:bubuds/screens/auth/forgot_password_page.dart';
 import 'package:bubuds/screens/department_selection_screen.dart';
+import 'package:bubuds/models/user_role.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -14,6 +15,43 @@ class _SignInPageState extends State<SignInPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  UserRole _selectedRole = UserRole.student;
+
+  Widget _buildRoleSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Select Role',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...UserRole.values.map((role) => RadioListTile<UserRole>(
+              title: Row(
+                children: [
+                  Icon(role.icon),
+                  const SizedBox(width: 8),
+                  Text(role.displayName),
+                ],
+              ),
+              value: role,
+              groupValue: _selectedRole,
+              onChanged: (UserRole? value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedRole = value;
+                  });
+                }
+              },
+            )),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
 
   Widget _buildTextField({
     required String label,
@@ -112,6 +150,7 @@ class _SignInPageState extends State<SignInPage> {
                 controller: _passwordController,
                 isPassword: true,
               ),
+              _buildRoleSelector(),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(

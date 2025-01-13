@@ -1,8 +1,11 @@
-import 'package:bubuds/screens/department_selection_screen.dart';
-import 'package:bubuds/widgets/dialogs.dart';
+import 'package:bubuds/navbar_items/menu/menu_navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/user_role.dart';
 import '../utils/validators.dart';
+import '../widgets/dialogs.dart';
+import 'department_selection_screen.dart';
 
 class SignUpDetails extends StatefulWidget {
   const SignUpDetails({super.key});
@@ -15,6 +18,43 @@ class _SignUpDetailsState extends State<SignUpDetails> {
   final _formKey = GlobalKey<FormState>();
   bool _termsAccepted = false;
   bool _obscurePassword = true;
+  UserRole _selectedRole = UserRole.student;
+
+  Widget _buildRoleSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Select Role',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...UserRole.values.map((role) => RadioListTile<UserRole>(
+              title: Row(
+                children: [
+                  Icon(role.icon),
+                  const SizedBox(width: 8),
+                  Text(role.displayName),
+                ],
+              ),
+              value: role,
+              groupValue: _selectedRole,
+              onChanged: (UserRole? value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedRole = value;
+                  });
+                }
+              },
+            )),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -27,21 +67,77 @@ class _SignUpDetailsState extends State<SignUpDetails> {
     await prefs.setString('userEmail', _emailController.text);
     await prefs.setString('userPhone', _phoneController.text);
     await prefs.setString('userPassword', _passwordController.text);
+    await prefs.setString('userRole', _selectedRole.toString());
   }
 
-  void _navigateToChoosingSubject() async {
+  Future<void> _showTermsAndConditions() async {
+    final String terms =
+        await rootBundle.loadString('assets/terms_and_conditions.txt');
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Terms and Conditions',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: Text(
+                        terms,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Close'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+  }
+
+  void _navigateToNextScreen() async {
     if (_formKey.currentState!.validate()) {
       if (_termsAccepted) {
         await _saveUserData();
         if (mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DepartmentSelectionScreen(
-                userName: _nameController.text,
+          if (_selectedRole == UserRole.guest) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MenuNavigationView(),
               ),
-            ),
-          );
+            );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => DepartmentSelectionScreen(
+                  userName: _nameController.text,
+                ),
+              ),
+            );
+          }
         }
       } else {
         DialogUtils.showErrorDialog(
@@ -166,11 +262,12 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                 ),
                 _buildTextField(
                   label: 'Phone Number',
-                  hintText: '0334 xxxx xxxx',
+                  hintText: '018 xxxx xxxx',
                   controller: _phoneController,
                   validator: Validators.validatePhone,
                   keyboardType: TextInputType.phone,
                 ),
+                _buildRoleSelector(),
                 Row(
                   children: [
                     Checkbox(
@@ -191,11 +288,16 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                           text: 'I agree with the ',
                           style: const TextStyle(color: Colors.black54),
                           children: [
-                            TextSpan(
-                              text: 'terms and conditions',
-                              style: const TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w500,
+                            WidgetSpan(
+                              child: GestureDetector(
+                                onTap: _showTermsAndConditions,
+                                child: const Text(
+                                  'terms and conditions',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
                               ),
                             ),
                             const TextSpan(
@@ -214,7 +316,7 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: _navigateToChoosingSubject,
+                    onPressed: _navigateToNextScreen,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE31E24),
                       shape: RoundedRectangleBorder(
