@@ -2,8 +2,6 @@ import 'package:bubuds/screens/onboarding_screen/department_selection_screen.dar
 import 'package:flutter/material.dart';
 import 'package:bubuds/screens/auth/signup_page.dart';
 import 'package:bubuds/screens/auth/forgot_password_page.dart';
-import 'package:bubuds/models/user_role.dart';
-import 'package:bubuds/screens/home_screenview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInPage extends StatefulWidget {
@@ -18,76 +16,23 @@ class _SignInPageState extends State<SignInPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  UserRole? _selectedRole;
 
   void _handleLogin() async {
-    if (_formKey.currentState!.validate() && _selectedRole != null) {
+    if (_formKey.currentState!.validate()) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userEmail', _emailController.text);
-      await prefs.setString('userRole', _selectedRole.toString());
 
       if (!mounted) return;
 
-      if (_selectedRole == UserRole.guest) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MyHomeScreenView(
-              userName: _emailController.text.split('@')[0],
-              selectedTopics: List.generate(5, (index) => false),
-              isGuestUser: true,
-            ),
-          ),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DepartmentSelectionScreen(
-              userName: _emailController.text.split('@')[0],
-            ),
-          ),
-        );
-      }
-    } else if (_selectedRole == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a role')),
-      );
-    }
-  }
-
-  Widget _buildRoleSelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Select Role',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DepartmentSelectionScreen(
+            userName: _emailController.text.split('@')[0],
           ),
         ),
-        const SizedBox(height: 8),
-        ...UserRole.values.map((role) => RadioListTile<UserRole>(
-              title: Row(
-                children: [
-                  Icon(role.icon),
-                  const SizedBox(width: 8),
-                  Text(role.displayName),
-                ],
-              ),
-              value: role,
-              groupValue: _selectedRole,
-              onChanged: (UserRole? value) {
-                setState(() {
-                  _selectedRole = value;
-                });
-              },
-            )),
-        const SizedBox(height: 16),
-      ],
-    );
+      );
+    }
   }
 
   @override
@@ -182,7 +127,6 @@ class _SignInPageState extends State<SignInPage> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      _buildRoleSelector(),
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(

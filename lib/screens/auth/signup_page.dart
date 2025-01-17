@@ -1,11 +1,9 @@
-import 'package:bubuds/navbar_items/menu/menu_navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../models/user_role.dart';
 import '../../utils/validators.dart';
 import '../../widgets/dialogs.dart';
-import '../home_screenview.dart';
+
 import '../onboarding_screen/department_selection_screen.dart';
 
 class SignUpDetails extends StatefulWidget {
@@ -19,43 +17,6 @@ class _SignUpDetailsState extends State<SignUpDetails> {
   final _formKey = GlobalKey<FormState>();
   bool _termsAccepted = false;
   bool _obscurePassword = true;
-  UserRole _selectedRole = UserRole.student;
-
-  Widget _buildRoleSelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Select Role',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ...UserRole.values.map((role) => RadioListTile<UserRole>(
-              title: Row(
-                children: [
-                  Icon(role.icon),
-                  const SizedBox(width: 8),
-                  Text(role.displayName),
-                ],
-              ),
-              value: role,
-              groupValue: _selectedRole,
-              onChanged: (UserRole? value) {
-                if (value != null) {
-                  setState(() {
-                    _selectedRole = value;
-                  });
-                }
-              },
-            )),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
 
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -68,7 +29,6 @@ class _SignUpDetailsState extends State<SignUpDetails> {
     await prefs.setString('userEmail', _emailController.text);
     await prefs.setString('userPhone', _phoneController.text);
     await prefs.setString('userPassword', _passwordController.text);
-    await prefs.setString('userRole', _selectedRole.toString());
   }
 
   Future<void> _showTermsAndConditions() async {
@@ -122,27 +82,14 @@ class _SignUpDetailsState extends State<SignUpDetails> {
       if (_termsAccepted) {
         await _saveUserData();
         if (mounted) {
-          if (_selectedRole == UserRole.guest) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MyHomeScreenView(
-                  userName: _nameController.text,
-                  selectedTopics: List.generate(5, (index) => false),
-                  isGuestUser: true,
-                ),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DepartmentSelectionScreen(
+                userName: _nameController.text,
               ),
-            );
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DepartmentSelectionScreen(
-                  userName: _nameController.text,
-                ),
-              ),
-            );
-          }
+            ),
+          );
         }
       } else {
         DialogUtils.showErrorDialog(
@@ -272,7 +219,6 @@ class _SignUpDetailsState extends State<SignUpDetails> {
                   validator: Validators.validatePhone,
                   keyboardType: TextInputType.phone,
                 ),
-                _buildRoleSelector(),
                 Row(
                   children: [
                     Checkbox(
