@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../utils/colors.dart';
 import '../../utils/typography.dart';
 import '../../utils/constants.dart';
+import '../home_screenview.dart';
 
 class OnboardingPageView extends StatefulWidget {
   const OnboardingPageView({super.key});
@@ -48,6 +49,19 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
         MaterialPageRoute(builder: (context) => const SignInPage()),
       );
     }
+  }
+
+  void _continueAsGuest() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyHomeScreenView(
+          userName: 'Guest',
+          selectedTopics: List.generate(5, (index) => false),
+          isGuestUser: true,
+        ),
+      ),
+    );
   }
 
   @override
@@ -170,13 +184,7 @@ class _OnboardingPageViewState extends State<OnboardingPageView> {
                     ),
                   ] else ...[
                     TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignInPage()),
-                        );
-                      },
+                      onPressed: _continueAsGuest,
                       child: Text(
                         'Login as Guest',
                         style: AppTypography.bodyMedium.copyWith(
