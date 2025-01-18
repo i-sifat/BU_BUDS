@@ -4,10 +4,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class MenuDetailSheet extends StatelessWidget {
   final MenuItem item;
+  final BuildContext context;
 
   const MenuDetailSheet({
     super.key,
     required this.item,
+    required this.context,
   });
 
   Future<void> _launchURL(String url) async {
@@ -68,12 +70,11 @@ class MenuDetailSheet extends StatelessWidget {
                     title: Text(subItem.title),
                     trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
+                      Navigator.pop(context);
                       if (subItem.link != null) {
-                        Navigator.pop(context);
                         _launchURL(subItem.link!);
                       } else if (subItem.onTap != null) {
-                        Navigator.pop(context);
-                        subItem.onTap!();
+                        subItem.onTap!(context);
                       }
                     },
                   );

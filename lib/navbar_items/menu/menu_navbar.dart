@@ -1,3 +1,4 @@
+import 'package:bubuds/screens/tuition/tuition_fee_screen.dart';
 import 'package:bubuds/widgets/menu/menu_detail_sheet.dart';
 import 'package:bubuds/widgets/menu/menu_grid_item.dart';
 import 'package:bubuds/widgets/menu/menu_item.dart';
@@ -60,7 +61,14 @@ class MenuNavigationView extends StatelessWidget {
             ),
             SubMenuItem(
               title: 'Tuition Fees',
-              link: 'https://bu.edu.bd/course-tuition-fees/',
+              onTap: (context) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const TuitionFeeScreen(),
+                  ),
+                );
+              },
             ),
             SubMenuItem(
               title: 'Offered Degrees',
@@ -124,7 +132,10 @@ class MenuNavigationView extends StatelessWidget {
         initialChildSize: 0.7,
         minChildSize: 0.5,
         maxChildSize: 0.95,
-        builder: (_, controller) => MenuDetailSheet(item: item),
+        builder: (_, controller) => MenuDetailSheet(
+          item: item,
+          context: context,
+        ),
       ),
     );
   }

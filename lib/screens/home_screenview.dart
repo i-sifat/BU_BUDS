@@ -38,12 +38,12 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
         NavigationDestination(
           icon: Icon(Icons.menu_outlined),
           selectedIcon: Icon(Icons.menu),
-          label: 'Menu',
+          label: '',
         ),
         NavigationDestination(
           icon: Icon(Icons.person_outline),
           selectedIcon: Icon(Icons.person),
-          label: 'Profile',
+          label: '',
         ),
       ];
     } else {
@@ -60,22 +60,22 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
         NavigationDestination(
           icon: Icon(Icons.dashboard_outlined),
           selectedIcon: Icon(Icons.dashboard),
-          label: 'Dashboard',
+          label: '',
         ),
         NavigationDestination(
           icon: Icon(Icons.calendar_today_outlined),
           selectedIcon: Icon(Icons.calendar_today),
-          label: 'Schedule',
+          label: '',
         ),
         NavigationDestination(
           icon: Icon(Icons.menu_outlined),
           selectedIcon: Icon(Icons.menu),
-          label: 'Menu',
+          label: '',
         ),
         NavigationDestination(
           icon: Icon(Icons.person_outline),
           selectedIcon: Icon(Icons.person),
-          label: 'Profile',
+          label: '',
         ),
       ];
     }
@@ -121,7 +121,7 @@ class _MyHomeScreenViewState extends State<MyHomeScreenView> {
           height: 65,
           backgroundColor: Colors.white,
           indicatorColor: Colors.teal.withOpacity(0.2),
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         ),
       ),
     );
