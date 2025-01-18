@@ -26,6 +26,7 @@ dependencies:
   google_fonts: ^6.2.1
   path_provider: ^2.1.5
   syncfusion_flutter_pdfviewer: ^28.1.39
+  pdf: ^3.11.1
 
 
 dev_dependencies:

@@ -1,10 +1,12 @@
 import 'package:bubuds/screens/auth/signup_page.dart';
+import 'package:bubuds/screens/routine/routine_generator_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/colors.dart';
 import '../../utils/typography.dart';
 import 'about_us_setting.dart';
 import 'update_profile_data.dart';
+// Previous imports remain the same...
 
 class PersonScreenView extends StatelessWidget {
   final String userName;
@@ -51,7 +53,6 @@ class PersonScreenView extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 20),
-          // Profile Section
           Center(
             child: Column(
               children: [
@@ -92,7 +93,6 @@ class PersonScreenView extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 32),
-          // Menu Items
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
@@ -106,6 +106,16 @@ class PersonScreenView extends StatelessWidget {
                   icon: Icons.language,
                   title: 'Language',
                   onTap: () {},
+                ),
+                _buildMenuItem(
+                  icon: Icons.calendar_today_outlined,
+                  title: 'Generate Routine',
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RoutineGeneratorScreen(),
+                    ),
+                  ),
                 ),
                 _buildMenuItem(
                   icon: Icons.settings_outlined,
