@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../screens/tuition/tuition_fee_screen.dart';
 
 class MenuItem {
   final String title;
@@ -26,4 +27,16 @@ class SubMenuItem {
     this.link,
     this.onTap,
   });
+
+  static SubMenuItem tuitionFees(BuildContext context) {
+    return SubMenuItem(
+      title: 'Tuition Fees',
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TuitionFeeScreen()),
+        );
+      },
+    );
+  }
 }

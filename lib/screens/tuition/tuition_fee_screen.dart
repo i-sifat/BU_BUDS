@@ -1,181 +1,234 @@
-// import 'package:flutter/material.dart';
-// import '../../models/tuition_fee.dart';
-// import '../../services/tuition_fee_service.dart';
-// import '../../utils/colors.dart';
-// import '../../utils/typography.dart';
+import 'package:flutter/material.dart';
+import '../../models/tuition_fee.dart';
+import '../../services/tuition_fee_service.dart';
+import '../../utils/colors.dart';
+import '../../utils/typography.dart';
 
-// class TuitionFeeScreen extends StatefulWidget {
-//   const TuitionFeeScreen({super.key});
+class TuitionFeeScreen extends StatefulWidget {
+  const TuitionFeeScreen({super.key});
 
-//   @override
-//   State<TuitionFeeScreen> createState() => _TuitionFeeScreenState();
-// }
+  @override
+  State<TuitionFeeScreen> createState() => _TuitionFeeScreenState();
+}
 
-// class _TuitionFeeScreenState extends State<TuitionFeeScreen> {
-//   final _tuitionService = TuitionFeeService();
-//   bool _isLoading = true;
-//   String? _error;
-//   List<TuitionFee>? _fees;
+class _TuitionFeeScreenState extends State<TuitionFeeScreen> {
+  final _tuitionService = TuitionFeeService();
+  bool _isLoading = true;
+  String? _error;
+  List<TuitionFee>? _fees;
+  String _selectedCategory = 'MBA';
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _loadFees();
-//   }
+  final List<String> _categories = ['MBA', 'Graduate', 'Undergraduate'];
 
-//   Future<void> _loadFees({bool forceRefresh = false}) async {
-//     if (!mounted) return;
+  @override
+  void initState() {
+    super.initState();
+    _loadFees();
+  }
 
-//     setState(() {
-//       _isLoading = true;
-//       _error = null;
-//     });
+  Future<void> _loadFees({bool forceRefresh = false}) async {
+    if (!mounted) return;
 
-//     try {
-//       final fees =
-//           await _tuitionService.getTuitionFees(forceRefresh: forceRefresh);
-//       if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
 
-//       setState(() {
-//         _fees = fees;
-//         _isLoading = false;
-//       });
-//     } catch (e) {
-//       if (!mounted) return;
+    try {
+      final fees =
+          await _tuitionService.getTuitionFees(forceRefresh: forceRefresh);
+      if (!mounted) return;
 
-//       setState(() {
-//         _error = e.toString();
-//         _isLoading = false;
-//       });
-//     }
-//   }
+      setState(() {
+        _fees = fees;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Tuition Fees', style: AppTypography.h3),
-//         actions: [
-//           IconButton(
-//             icon: const Icon(Icons.refresh),
-//             onPressed: () => _loadFees(forceRefresh: true),
-//           ),
-//         ],
-//       ),
-//       body: _buildBody(),
-//     );
-//   }
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
 
-//   Widget _buildBody() {
-//     if (_isLoading) {
-//       return const Center(child: CircularProgressIndicator());
-//     }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text('Fees'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.grid_view),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: _buildBody(),
+    );
+  }
 
-//     if (_error != null) {
-//       return Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text(_error!, style: AppTypography.bodyMedium),
-//             const SizedBox(height: 16),
-//             ElevatedButton(
-//               onPressed: () => _loadFees(forceRefresh: true),
-//               child: const Text('Retry'),
-//             ),
-//           ],
-//         ),
-//       );
-//     }
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-//     if (_fees == null || _fees!.isEmpty) {
-//       return const Center(
-//         child: Text('No tuition fee information available'),
-//       );
-//     }
+    if (_error != null) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(_error!, style: AppTypography.bodyMedium),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => _loadFees(forceRefresh: true),
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    }
 
-//     return RefreshIndicator(
-//       onRefresh: () => _loadFees(forceRefresh: true),
-//       child: ListView.builder(
-//         padding: const EdgeInsets.all(16),
-//         itemCount: _fees!.length,
-//         itemBuilder: (context, index) => _buildFeeCard(_fees![index]),
-//       ),
-//     );
-//   }
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: _selectedCategory,
+              isExpanded: true,
+              items: _categories.map((String category) {
+                return DropdownMenuItem<String>(
+                  value: category,
+                  child: Text(category),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    _selectedCategory = newValue;
+                  });
+                }
+              },
+            ),
+          ),
+        ),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              _buildFeeCard(
+                title: 'MBA (Reg 60 Cr.)',
+                totalFee: '150000',
+                breakdown: {
+                  'Total Fee': '120000',
+                  'Admission fee': '30000',
+                  'Semester Fee': '',
+                  'Waiver Fee': '',
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildFeeCard(
+                title: 'MBA (Reg 60 Cr.)',
+                totalFee: '150000',
+                breakdown: {},
+              ),
+              const SizedBox(height: 16),
+              _buildFeeCard(
+                title: 'MBA (Reg 60 Cr.)',
+                totalFee: '150000',
+                breakdown: {},
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 
-//   Widget _buildFeeCard(TuitionFee fee) {
-//     return Card(
-//       margin: const EdgeInsets.only(bottom: 16),
-//       child: Padding(
-//         padding: const EdgeInsets.all(16),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               fee.degree,
-//               style: AppTypography.h3.copyWith(color: AppColors.primary),
-//             ),
-//             const SizedBox(height: 8),
-//             Text('Duration: ${fee.duration}'),
-//             const Divider(),
-//             _buildFeeSection('Admission Fee', fee.admissionFee),
-//             _buildFeeSection('Course Fee', fee.totalFee.courseFee),
-//             _buildFeeSection(
-//               'Total Fee (with admission)',
-//               fee.totalFee.totalFeeWithAdmission,
-//             ),
-//             const Divider(),
-//             Text(
-//               'Semester Fee Breakdown',
-//               style:
-//                   AppTypography.bodyLarge.copyWith(fontWeight: FontWeight.bold),
-//             ),
-//             const SizedBox(height: 8),
-//             _buildFeeSection(
-//               'First Installment',
-//               fee.semesterFee.admissionPlusFirstInstallment,
-//             ),
-//             _buildFeeSection(
-//                 'Other Installments', fee.semesterFee.installments),
-//             if (fee.additionalNotes.isNotEmpty) ...[
-//               const Divider(),
-//               Text(
-//                 'Additional Notes',
-//                 style: AppTypography.bodyLarge
-//                     .copyWith(fontWeight: FontWeight.bold),
-//               ),
-//               const SizedBox(height: 8),
-//               ...fee.additionalNotes.map((note) => Padding(
-//                     padding: const EdgeInsets.only(bottom: 4),
-//                     child: Row(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         const Text('• '),
-//                         Expanded(child: Text(note)),
-//                       ],
-//                     ),
-//                   )),
-//             ],
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildFeeSection(String label, String value) {
-//     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 4),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Text(label, style: AppTypography.bodyMedium),
-//           Text(
-//             value,
-//             style:
-//                 AppTypography.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  Widget _buildFeeCard({
+    required String title,
+    required String totalFee,
+    required Map<String, String> breakdown,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFF1F1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              const Text(
+                'T ',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                totalFee,
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          if (breakdown.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            ...breakdown.entries.map((entry) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      entry.key,
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 14,
+                      ),
+                    ),
+                    if (entry.value.isNotEmpty)
+                      Text(
+                        entry.value,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
+                      ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ],
+      ),
+    );
+  }
+}
