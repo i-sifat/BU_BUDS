@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../utils/colors.dart';
 import '../../utils/typography.dart';
-import 'about_screen.dart';
-import 'profile_screen.dart';
+import 'about_us_setting.dart';
+import 'update_profile_data.dart';
 
 class PersonScreenView extends StatelessWidget {
   final String userName;

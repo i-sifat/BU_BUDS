@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import '../navbar_items/dashboard/dashboard_navbar.dart';
 import '../navbar_items/menu/menu_navbar.dart';
 import '../navbar_items/schedule/schedule_navbar.dart';
-import '../navbar_items/person/person_navbar.dart';
+import '../navbar_items/person/user_profile_navbar.dart';
 
 class MyHomeScreenView extends StatefulWidget {
   final String userName;
