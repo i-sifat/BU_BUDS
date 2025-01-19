@@ -1,14 +1,10 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:ui' as ui;
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import '../../models/routine.dart';
 import '../../utils/colors.dart';
 import '../../utils/pdf_generator.dart';
 import '../../services/image_generator_service.dart';
-import '../../services/storage_permission_service.dart';
+
 import '../../widgets/dialogs/permission_dialog.dart';
 
 class RoutinePreviewScreen extends StatelessWidget {
