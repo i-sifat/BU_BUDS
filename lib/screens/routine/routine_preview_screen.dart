@@ -1,29 +1,31 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import '../../models/routine.dart';
-import '../../utils/pdf_generator.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:ui' as ui;
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import '../../models/routine.dart';
+import '../../utils/colors.dart';
+import '../../utils/pdf_generator.dart';
 
 class RoutinePreviewScreen extends StatelessWidget {
   final List<ScheduleItem> schedules;
+  final GlobalKey _printKey = GlobalKey();
 
-  const RoutinePreviewScreen({
+  RoutinePreviewScreen({
     super.key,
     required this.schedules,
   });
 
-  // Group schedules by day and sort by time
   Map<String, List<ScheduleItem>> _getGroupedSchedules() {
-    // First sort all schedules by time
     final sortedSchedules = List<ScheduleItem>.from(schedules)
       ..sort((a, b) {
-        // Convert time strings to comparable format
         final aTime = _parseTime(a.startTime);
         final bTime = _parseTime(b.startTime);
         return aTime.compareTo(bTime);
       });
 
-    // Then group by day
     final grouped = <String, List<ScheduleItem>>{};
     for (var schedule in sortedSchedules) {
       if (!grouped.containsKey(schedule.dayOfWeek)) {
@@ -34,15 +36,12 @@ class RoutinePreviewScreen extends StatelessWidget {
     return grouped;
   }
 
-  // Helper method to parse time string into comparable format
   DateTime _parseTime(String timeStr) {
-    // Assuming time format is "HH:mm AM/PM"
     final parts = timeStr.split(' ');
     final timeParts = parts[0].split(':');
     var hour = int.parse(timeParts[0]);
     final minute = int.parse(timeParts[1]);
 
-    // Convert to 24-hour format
     if (parts[1] == 'PM' && hour != 12) {
       hour += 12;
     } else if (parts[1] == 'AM' && hour == 12) {
@@ -52,26 +51,93 @@ class RoutinePreviewScreen extends StatelessWidget {
     return DateTime(2024, 1, 1, hour, minute);
   }
 
-  void _downloadRoutine(BuildContext context) {
+  Future<void> _captureAndSavePng(BuildContext context) async {
     try {
-      getExternalStorageDirectory().then((directory) {
-        if (directory != null) {
-          final filePath = '${directory.path}/routine.pdf';
-          PdfGenerator.generateRoutinePdf(schedules).then((_) {
-            if (File(filePath).existsSync()) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Routine downloaded successfully!'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            }
-          });
+      // Find the RepaintBoundary
+      RenderRepaintBoundary boundary =
+          _printKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+
+      // Capture the image with higher quality
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+
+      if (byteData != null) {
+        // Get the application directory
+        final directory = await getApplicationDocumentsDirectory();
+        final imagePath =
+            '${directory.path}/routine_${DateTime.now().millisecondsSinceEpoch}.png';
+        final imageFile = File(imagePath);
+
+        // Write the file
+        await imageFile.writeAsBytes(byteData.buffer.asUint8List());
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Image saved to: $imagePath'),
+              backgroundColor: Colors.green,
+            ),
+          );
         }
-      });
+      }
     } catch (e) {
-      debugPrint('Error downloading routine: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
+  }
+
+  void _showSaveOptions(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Save Routine'),
+          content: const Text('Choose a format to save:'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _captureAndSavePng(context);
+              },
+              child: const Text('Save as Image'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                try {
+                  await PdfGenerator.generateRoutinePdf(schedules);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('PDF saved successfully!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to save PDF: $e'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+              child: const Text('Save as PDF'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -101,101 +167,128 @@ class RoutinePreviewScreen extends StatelessWidget {
           style: TextStyle(color: Colors.black, fontSize: 20),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.download, color: Colors.black),
-            onPressed: () => _downloadRoutine(context),
-          ),
-        ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              // University Logo and Header
-              Image.asset('assets/icon.png', height: 60),
-              const SizedBox(height: 16),
-              const Text(
-                'Bangladesh University',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Text(
-                'Department of English (57th)',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const Text(
-                'Class Routine (Spring-2022)',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Routine Table
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: RepaintBoundary(
+                key: _printKey,
                 child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.green.shade700),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Table(
-                    defaultColumnWidth: const IntrinsicColumnWidth(),
-                    border: TableBorder.all(
-                      color: Colors.green.shade700,
-                      width: 1,
-                    ),
+                  color: Colors.white,
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
                     children: [
-                      TableRow(
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade700,
+                      Image.asset('assets/icon.png', height: 60),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Bangladesh University',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
-                        children: const [
-                          _HeaderCell('Day'),
-                          _HeaderCell('Time'),
-                          _HeaderCell('Course Name'),
-                          _HeaderCell('Code'),
-                          _HeaderCell('Room'),
-                          _HeaderCell('Teacher\'s Name'),
-                        ],
                       ),
-                      ...orderedDays.map((day) {
-                        final daySchedules = groupedSchedules[day]!;
-                        return TableRow(
-                          children: [
-                            _DataCell(day),
-                            _DataCell(daySchedules
-                                .map((s) => '${s.startTime} - ${s.endTime}')
-                                .join('\n')),
-                            _DataCell(daySchedules
-                                .map((s) => s.courseCode)
-                                .join('\n')),
-                            _DataCell(daySchedules
-                                .map((s) => s.courseCode)
-                                .join('\n')),
-                            _DataCell(
-                                daySchedules.map((s) => s.room).join('\n')),
-                            _DataCell(daySchedules
-                                .map((s) => s.teacherName)
-                                .join('\n')),
-                          ],
-                        );
-                      }).toList(),
+                      const Text(
+                        'Department of English (57th)',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const Text(
+                        'Class Routine (Spring-2022)',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.green.shade700),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Table(
+                            defaultColumnWidth: const IntrinsicColumnWidth(),
+                            border: TableBorder.all(
+                              color: Colors.green.shade700,
+                              width: 1,
+                            ),
+                            children: [
+                              TableRow(
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade700,
+                                ),
+                                children: const [
+                                  _HeaderCell('Day'),
+                                  _HeaderCell('Time'),
+                                  _HeaderCell('Course Name'),
+                                  _HeaderCell('Code'),
+                                  _HeaderCell('Room'),
+                                  _HeaderCell('Teacher\'s Name'),
+                                ],
+                              ),
+                              ...orderedDays.map((day) {
+                                final daySchedules = groupedSchedules[day]!;
+                                return TableRow(
+                                  children: [
+                                    _DataCell(day),
+                                    _DataCell(daySchedules
+                                        .map((s) =>
+                                            '${s.startTime} - ${s.endTime}')
+                                        .join('\n')),
+                                    _DataCell(daySchedules
+                                        .map((s) => s.courseCode)
+                                        .join('\n')),
+                                    _DataCell(daySchedules
+                                        .map((s) => s.courseCode)
+                                        .join('\n')),
+                                    _DataCell(daySchedules
+                                        .map((s) => s.room)
+                                        .join('\n')),
+                                    _DataCell(daySchedules
+                                        .map((s) => s.teacherName)
+                                        .join('\n')),
+                                  ],
+                                );
+                              }).toList(),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () => _showSaveOptions(context),
+                child: const Text(
+                  'Share Routine',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
