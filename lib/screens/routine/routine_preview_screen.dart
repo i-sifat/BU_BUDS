@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui;
@@ -8,6 +7,9 @@ import 'package:path_provider/path_provider.dart';
 import '../../models/routine.dart';
 import '../../utils/colors.dart';
 import '../../utils/pdf_generator.dart';
+import '../../services/image_generator_service.dart';
+import '../../services/storage_permission_service.dart';
+import '../../widgets/dialogs/permission_dialog.dart';
 
 class RoutinePreviewScreen extends StatelessWidget {
   final List<ScheduleItem> schedules;
@@ -51,35 +53,35 @@ class RoutinePreviewScreen extends StatelessWidget {
     return DateTime(2024, 1, 1, hour, minute);
   }
 
-  Future<void> _captureAndSavePng(BuildContext context) async {
+  Future<void> _handleImageSave(BuildContext context) async {
     try {
+      // Show permission dialog
+      final shouldProceed = await showDialog<bool>(
+        context: context,
+        builder: (context) => const PermissionDialog(
+          title: 'Storage Permission Required',
+          message: 'We need permission to save images to your device storage.',
+        ),
+      );
+
+      if (shouldProceed != true) return;
+
       // Find the RepaintBoundary
-      RenderRepaintBoundary boundary =
+      final boundary =
           _printKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
-      // Capture the image with higher quality
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      // Save the image
+      final imagePath =
+          await ImageGeneratorService.captureAndSaveImage(boundary);
 
-      if (byteData != null) {
-        // Get the application directory
-        final directory = await getApplicationDocumentsDirectory();
-        final imagePath =
-            '${directory.path}/routine_${DateTime.now().millisecondsSinceEpoch}.png';
-        final imageFile = File(imagePath);
-
-        // Write the file
-        await imageFile.writeAsBytes(byteData.buffer.asUint8List());
-
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Image saved to: $imagePath'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
+      if (imagePath != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content:
+                Text('Image saved to Downloads: ${imagePath.split('/').last}'),
+            backgroundColor: Colors.green,
+          ),
+        );
       }
     } catch (e) {
       if (context.mounted) {
@@ -104,7 +106,7 @@ class RoutinePreviewScreen extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                _captureAndSavePng(context);
+                _handleImageSave(context);
               },
               child: const Text('Save as Image'),
             ),
