@@ -85,7 +85,7 @@ class RoutinePreviewScreen extends StatelessWidget {
       'Wednesday',
       'Thursday',
       'Friday'
-    ];
+    ].where((day) => groupedSchedules.containsKey(day)).toList();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -168,21 +168,7 @@ class RoutinePreviewScreen extends StatelessWidget {
                         ],
                       ),
                       ...orderedDays.map((day) {
-                        final daySchedules = groupedSchedules[day] ?? [];
-                        if (daySchedules.isEmpty) {
-                          return TableRow(
-                            children: [
-                              _DataCell(day),
-                              const _DataCell('-'),
-                              const _DataCell('-'),
-                              const _DataCell('-'),
-                              const _DataCell('-'),
-                              const _DataCell('-'),
-                            ],
-                          );
-                        }
-
-                        // Create rows for each schedule on this day
+                        final daySchedules = groupedSchedules[day]!;
                         return TableRow(
                           children: [
                             _DataCell(day),
@@ -224,6 +210,7 @@ class _HeaderCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      alignment: Alignment.center,
       child: Text(
         text,
         style: const TextStyle(
@@ -231,6 +218,7 @@ class _HeaderCell extends StatelessWidget {
           fontWeight: FontWeight.bold,
           fontSize: 14,
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -245,9 +233,11 @@ class _DataCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      alignment: Alignment.center,
       child: Text(
         text,
         style: const TextStyle(fontSize: 14),
+        textAlign: TextAlign.center,
       ),
     );
   }
