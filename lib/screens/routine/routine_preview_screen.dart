@@ -12,6 +12,46 @@ class RoutinePreviewScreen extends StatelessWidget {
     required this.schedules,
   });
 
+  // Group schedules by day and sort by time
+  Map<String, List<ScheduleItem>> _getGroupedSchedules() {
+    // First sort all schedules by time
+    final sortedSchedules = List<ScheduleItem>.from(schedules)
+      ..sort((a, b) {
+        // Convert time strings to comparable format
+        final aTime = _parseTime(a.startTime);
+        final bTime = _parseTime(b.startTime);
+        return aTime.compareTo(bTime);
+      });
+
+    // Then group by day
+    final grouped = <String, List<ScheduleItem>>{};
+    for (var schedule in sortedSchedules) {
+      if (!grouped.containsKey(schedule.dayOfWeek)) {
+        grouped[schedule.dayOfWeek] = [];
+      }
+      grouped[schedule.dayOfWeek]!.add(schedule);
+    }
+    return grouped;
+  }
+
+  // Helper method to parse time string into comparable format
+  DateTime _parseTime(String timeStr) {
+    // Assuming time format is "HH:mm AM/PM"
+    final parts = timeStr.split(' ');
+    final timeParts = parts[0].split(':');
+    var hour = int.parse(timeParts[0]);
+    final minute = int.parse(timeParts[1]);
+
+    // Convert to 24-hour format
+    if (parts[1] == 'PM' && hour != 12) {
+      hour += 12;
+    } else if (parts[1] == 'AM' && hour == 12) {
+      hour = 0;
+    }
+
+    return DateTime(2024, 1, 1, hour, minute);
+  }
+
   void _downloadRoutine(BuildContext context) {
     try {
       getExternalStorageDirectory().then((directory) {
@@ -36,153 +76,177 @@ class RoutinePreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final groupedSchedules = _getGroupedSchedules();
+    final orderedDays = [
+      'Saturday',
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday'
+    ];
+
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Class Routine'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Class Routine',
+          style: TextStyle(color: Colors.black, fontSize: 20),
+        ),
+        centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.download),
+            icon: const Icon(Icons.download, color: Colors.black),
             onPressed: () => _downloadRoutine(context),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        child: Center(
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width,
-            ),
-            child: Column(
-              children: [
-                const SizedBox(height: 24),
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Bangladesh University',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // University Logo and Header
+              Image.asset('assets/icon.png', height: 60),
+              const SizedBox(height: 16),
+              const Text(
+                'Bangladesh University',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Department of English (57th)',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+              ),
+              const Text(
+                'Department of English (57th)',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-                const SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: const Text(
-                    'Class Schedule',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+              ),
+              const Text(
+                'Class Routine (Spring-2022)',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-                const SizedBox(height: 24),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 2,
+              ),
+              const SizedBox(height: 24),
+
+              // Routine Table
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.green.shade700),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Table(
+                    defaultColumnWidth: const IntrinsicColumnWidth(),
+                    border: TableBorder.all(
+                      color: Colors.green.shade700,
+                      width: 1,
                     ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.green[700],
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(8),
-                              topRight: Radius.circular(8),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              _buildHeaderCell('Day', 0.15),
-                              _buildHeaderCell('Time', 0.2),
-                              _buildHeaderCell('Course Name', 0.2),
-                              _buildHeaderCell('Code', 0.15),
-                              _buildHeaderCell('Room', 0.1),
-                              _buildHeaderCell('Teacher\'s Name', 0.2),
-                            ],
-                          ),
+                    children: [
+                      TableRow(
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade700,
                         ),
-                        ...schedules.map((schedule) => Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: Colors.grey[300]!),
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  _buildCell(schedule.dayOfWeek, 0.15),
-                                  _buildCell(
-                                      '${schedule.startTime} - ${schedule.endTime}',
-                                      0.2),
-                                  _buildCell(schedule.courseCode, 0.2),
-                                  _buildCell(schedule.courseCode, 0.15),
-                                  _buildCell(schedule.room, 0.1),
-                                  _buildCell(schedule.teacherName, 0.2),
-                                ],
-                              ),
-                            )),
-                      ],
-                    ),
+                        children: const [
+                          _HeaderCell('Day'),
+                          _HeaderCell('Time'),
+                          _HeaderCell('Course Name'),
+                          _HeaderCell('Code'),
+                          _HeaderCell('Room'),
+                          _HeaderCell('Teacher\'s Name'),
+                        ],
+                      ),
+                      ...orderedDays.map((day) {
+                        final daySchedules = groupedSchedules[day] ?? [];
+                        if (daySchedules.isEmpty) {
+                          return TableRow(
+                            children: [
+                              _DataCell(day),
+                              const _DataCell('-'),
+                              const _DataCell('-'),
+                              const _DataCell('-'),
+                              const _DataCell('-'),
+                              const _DataCell('-'),
+                            ],
+                          );
+                        }
+
+                        // Create rows for each schedule on this day
+                        return TableRow(
+                          children: [
+                            _DataCell(day),
+                            _DataCell(daySchedules
+                                .map((s) => '${s.startTime} - ${s.endTime}')
+                                .join('\n')),
+                            _DataCell(daySchedules
+                                .map((s) => s.courseCode)
+                                .join('\n')),
+                            _DataCell(daySchedules
+                                .map((s) => s.courseCode)
+                                .join('\n')),
+                            _DataCell(
+                                daySchedules.map((s) => s.room).join('\n')),
+                            _DataCell(daySchedules
+                                .map((s) => s.teacherName)
+                                .join('\n')),
+                          ],
+                        );
+                      }).toList(),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 24),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildHeaderCell(String text, double widthFactor) {
+class _HeaderCell extends StatelessWidget {
+  final String text;
+
+  const _HeaderCell(this.text);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      width: widthFactor * 800,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Text(
         text,
-        textAlign: TextAlign.center,
         style: const TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
+          fontSize: 14,
         ),
       ),
     );
   }
+}
 
-  Widget _buildCell(String text, double widthFactor) {
+class _DataCell extends StatelessWidget {
+  final String text;
+
+  const _DataCell(this.text);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      width: widthFactor * 800,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      alignment: Alignment.center,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Text(
         text,
-        textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 14),
       ),
     );
